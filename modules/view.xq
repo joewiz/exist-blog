@@ -1,27 +1,24 @@
 xquery version "3.1";
 
 (:~
- : Template processing entry point for the blog.
+ : Template view module for the blog.
  :
- : For full-page requests (layout="full"), this module:
- :   1. Processes the content template through html-templating (data-template attrs)
- :   2. Builds a layout context with dynamically discovered installed apps
- :   3. Renders the jinks-templates layout shell with the processed content inserted
+ : Pass 1: html-templating processes data-template attributes in content templates
+ : Pass 2: Jinks renders page-content.tpl (extends profile's base-page.html)
  :
- : For fragment requests (layout="fragment"), only step 1 is performed.
+ : If the profile files are not present (base-page.html missing), falls back
+ : to page-content-standalone.tpl.
  :)
 
 import module namespace templates="http://exist-db.org/xquery/html-templating";
-import module namespace lib="http://exist-db.org/xquery/html-templating/lib";
 import module namespace tmpl="http://e-editiones.org/xquery/templates";
 import module namespace config="http://exist-db.org/apps/blog/config" at "config.xqm";
 import module namespace blog="http://exist-db.org/apps/blog" at "blog.xqm";
+import module namespace app="http://exist-db.org/apps/blog/app" at "app.xqm";
 
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
-declare namespace expath="http://expath.org/ns/pkg";
 
-declare option output:method "html";
-declare option output:html-version "5.0";
+declare option output:method "html5";
 declare option output:media-type "text/html";
 declare option output:indent "no";
 
@@ -38,8 +35,12 @@ declare variable $local:templating-config := map {
     $templates:CONFIG_STOP_ON_ERROR : true()
 };
 
+(:~ Is the profile's base template available? :)
+declare variable $local:profile-available :=
+    util:binary-doc-available($config:app-root || "/templates/base-page.html");
+
 (:~
- : Load a resource as a string, whether stored as binary or XML.
+ : Load a resource as a string.
  :)
 declare function local:load-resource($path as xs:string) as xs:string? {
     if (util:binary-doc-available($path)) then
@@ -51,88 +52,75 @@ declare function local:load-resource($path as xs:string) as xs:string? {
 };
 
 (:~
- : Resolver for jinks-templates: finds template files first in the app's
- : templates directory, then falls back to the site-shell package.
+ : Resolver for Jinks templates.
+ : Handles absolute /db/ paths (for module resolution) and relative paths.
  :)
-declare function local:resolver($relPath as xs:string) as map(*)? {
-    let $local-path := $config:app-root || "/templates/" || $relPath
-    let $shell-path := "/db/apps/exist-site-shell/templates/" || $relPath
+declare function local:resolver($path as xs:string) as map(*)? {
+    let $effectivePath :=
+        if (starts-with($path, "/db/")) then $path
+        else $config:app-root || "/" || $path
+    let $content := local:load-resource($effectivePath)
     return
-        if (util:binary-doc-available($local-path)) then
-            map { "path": $local-path, "content": util:binary-to-string(util:binary-doc($local-path)) }
-        else if (util:binary-doc-available($shell-path)) then
-            map { "path": $shell-path, "content": util:binary-to-string(util:binary-doc($shell-path)) }
+        if ($content) then
+            map { "path": $effectivePath, "content": $content }
         else
             ()
 };
 
 (:~
- : Discover all installed eXist-db app packages.
+ : Build the rendering context matching the exist-site profile interface.
  :)
-declare function local:installed-apps() as map(*) {
-    let $context := request:get-context-path()
-    return map:merge(
-        for $pkg in repo:list()
-        let $info :=
-            try { repo:get-resource($pkg, "expath-pkg.xml") }
-            catch * { () }
-        let $parsed :=
-            if (exists($info)) then
-                try { parse-xml(util:binary-to-string($info)) }
-                catch * { () }
-            else ()
-        let $abbrev := $parsed/expath:package/@abbrev/string()
-        where $abbrev
-        return map { $abbrev: $context || "/apps/" || $abbrev }
-    )
-};
-
-(:~
- : Build the layout context for jinks-templates rendering.
- :)
-declare function local:layout-context() as map(*) {
-    let $apps := local:installed-apps()
-    let $abbrev := "blog"
-    let $context-path := request:get-context-path() || "/apps/" || $abbrev
-    let $user := request:get-attribute($config:login-domain || ".user")
-    let $page-title := request:get-attribute("page-title")
+declare function local:build-context() as map(*) {
+    let $contextPath := request:get-context-path() || "/apps/blog"
+    let $pageTitle := request:get-attribute("page-title")
     return map {
-        "title": if ($page-title) then $page-title || " — " || $config:blog-title else $config:blog-title,
-        "context-path": $context-path,
-        "apps": $apps,
-        "user": if ($user) then $user else "guest",
-        "site-logo": ($apps?("exist-site-shell"), $context-path)[1] || "/resources/images/exist-logo.svg",
-        "site-name": "eXist-db",
-        "shell-base": ($apps?("exist-site-shell"), $context-path)[1],
-        "nav-apps": array {
-            for $app in ("dashboard", "blog", "fundocs", "eXide")
-            where map:contains($apps, $app)
-            return map {
-                "title": switch ($app)
-                    case "dashboard" return "Dashboard"
-                    case "blog" return "Blog"
-                    case "fundocs" return "Functions"
-                    case "eXide" return "eXide"
-                    default return $app,
-                "url": $apps($app),
-                "active": $app eq $abbrev
+        "context-path": $contextPath,
+        "styles": array { "resources/css/exist-site.css", "resources/css/blog.css" },
+        "site": map {
+            "name": "eXist-db",
+            "logo": "resources/images/exist-logo.svg"
+        },
+        "nav": map {
+            "items": array {
+                map { "abbrev": "dashboard", "title": "Dashboard" },
+                map { "abbrev": "docs", "title": "Documentation" },
+                map { "abbrev": "notebook", "title": "Notebook" },
+                map { "abbrev": "blog", "title": "Blog" }
             }
-        }
+        },
+        "page-title": if ($pageTitle) then $pageTitle || " — " || $config:blog-title else $config:blog-title
     }
 };
 
 (:~
- : Render the full page by wrapping processed content in the jinks layout shell.
+ : Render a full page.
+ : Pass 1: html-templating processes data-template attributes
+ : Pass 2: Jinks renders page-content.tpl (extends base-page.html)
  :)
-declare function local:render-full-page($content as item()*) {
-    let $ctx := local:layout-context()
-    let $ctx := map:merge(($ctx, map { "content": $content }))
-    let $template := local:load-resource($config:app-root || "/templates/page.html")
+declare function local:render-page($content as item()*) {
+    let $ctx := local:build-context()
+    let $fullCtx := map:merge((
+        $ctx,
+        map { "blog-content": $content }
+    ))
+    let $tplName :=
+        if ($local:profile-available) then "page-content.tpl"
+        else "page-content-standalone.tpl"
+    let $tpl := local:load-resource($config:app-root || "/templates/" || $tplName)
     return
-        if ($template) then
-            tmpl:process($template, $ctx, map {
-                "plainText": false(),
-                "resolver": local:resolver#1
+        if ($tpl) then
+            tmpl:process($tpl, $fullCtx, map {
+                "resolver": local:resolver#1,
+                "modules": map {
+                    "http://exist-db.org/site/nav": map {
+                        "prefix": "nav",
+                        "at": $config:app-root || "/modules/nav.xqm"
+                    },
+                    "http://exist-db.org/site/shell-config": map {
+                        "prefix": "site-config",
+                        "at": $config:app-root || "/modules/site-config.xqm"
+                    }
+                }
             })
         else
             $content
@@ -140,15 +128,26 @@ declare function local:render-full-page($content as item()*) {
 
 (: === Main entry point === :)
 
-let $layout-mode := request:get-attribute("layout")
-let $content := templates:apply(
-    request:get-data(),
-    local:lookup#2,
-    (),
-    $local:templating-config
-)
+let $template-path := request:get-attribute("template")
+let $full-path := $config:app-root || "/" || $template-path
+
+(: Pass 1: Load and process the content template through html-templating :)
+let $raw := local:load-resource($full-path)
+let $content :=
+    if (exists($raw)) then
+        let $parsed := parse-xml($raw)
+        return templates:apply(
+            $parsed,
+            local:lookup#2,
+            (),
+            $local:templating-config
+        )
+    else
+        <div class="error">Template not found: {$template-path}</div>
+
+(: Pass 2: Wrap in page layout :)
 return
-    if ($layout-mode eq "full") then
-        local:render-full-page($content)
+    if (request:get-attribute("layout") eq "full") then
+        local:render-page($content)
     else
         $content

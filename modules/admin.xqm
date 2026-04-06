@@ -8,6 +8,7 @@ module namespace admin="http://exist-db.org/apps/blog/admin";
 
 import module namespace config="http://exist-db.org/apps/blog/config" at "config.xqm";
 import module namespace blog="http://exist-db.org/apps/blog" at "blog.xqm";
+import module namespace router="http://e-editiones.org/roaster/router";
 
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
 
@@ -15,9 +16,12 @@ declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
  : Check if the current user has blog admin permissions.
  :)
 declare function admin:is-editor() as xs:boolean {
-    let $user := request:get-attribute($config:login-domain || ".user")
+    let $user := (
+        request:get-attribute($config:login-domain || ".user"),
+        sm:id()//sm:real/sm:username/string()
+    )[1]
     return
-        exists($user) and (
+        exists($user) and $user ne "guest" and (
             sm:is-dba($user) or
             "blog-editor" = sm:get-user-groups($user)
         )
@@ -32,7 +36,7 @@ declare function admin:is-editor() as xs:boolean {
  :)
 declare function admin:list-posts($request as map(*)) {
     if (not(admin:is-editor())) then
-        map { "error": "Forbidden", "status": 403 }
+        router:response(403, "application/json", map { "error": "Forbidden" }, ())
     else
         let $status := ($request?parameters?status, "all")[1]
         let $posts := blog:list-posts(map { "status": $status, "start": 1, "count": 999999 })
@@ -63,7 +67,7 @@ declare function admin:list-posts($request as map(*)) {
  :)
 declare function admin:get-post($request as map(*)) {
     if (not(admin:is-editor())) then
-        map { "error": "Forbidden", "status": 403 }
+        router:response(403, "application/json", map { "error": "Forbidden" }, ())
     else
         let $slug := $request?parameters?slug
         let $path := $slug || ".md"
@@ -85,7 +89,7 @@ declare function admin:get-post($request as map(*)) {
                     "body": $meta?body
                 }
             else
-                map { "error": "Post not found", "status": 404 }
+                router:response(404, "application/json", map { "error": "Post not found" }, ())
 };
 
 (:~
@@ -98,7 +102,7 @@ declare function admin:get-post($request as map(*)) {
  :)
 declare function admin:create-post($request as map(*)) {
     if (not(admin:is-editor())) then
-        map { "error": "Forbidden", "status": 403 }
+        router:response(403, "application/json", map { "error": "Forbidden" }, ())
     else
         let $body := $request?body
         let $title := $body?title
@@ -137,19 +141,18 @@ declare function admin:create-post($request as map(*)) {
 
         return
             if (util:binary-doc-available($target-path)) then
-                map { "error": "Post already exists at " || $year || "/" || $slug, "status": 409 }
-            else (
-                (: ensure year collection exists :)
-                if (xmldb:collection-available($collection)) then ()
-                else xmldb:create-collection($config:posts-root, $year),
-
-                xmldb:store($collection, $filename, $markdown, "text/markdown"),
-                map {
+                router:response(409, "application/json", map { "error": "Post already exists at " || $year || "/" || $slug }, ())
+            else
+                let $_ := (
+                    if (xmldb:collection-available($collection)) then ()
+                    else xmldb:create-collection($config:posts-root, $year),
+                    xmldb:store($collection, $filename, $markdown, "text/markdown")
+                )
+                return map {
                     "success": true(),
                     "slug": $year || "/" || $slug,
                     "path": $year || "/" || $filename
                 }
-            )
 };
 
 (:~
@@ -162,29 +165,25 @@ declare function admin:create-post($request as map(*)) {
  :)
 declare function admin:update-post($request as map(*)) {
     if (not(admin:is-editor())) then
-        map { "error": "Forbidden", "status": 403 }
+        router:response(403, "application/json", map { "error": "Forbidden" }, ())
     else
         let $slug := $request?parameters?slug
         let $body := $request?body
         let $source := $body?source
         return
             if (empty($source) or $source eq "") then
-                map { "error": "No source content provided", "status": 400 }
+                router:response(400, "application/json", map { "error": "No source content provided" }, ())
             else
                 (: Find the file by slug — try with year prefix patterns :)
                 let $path := admin:resolve-slug($slug)
                 return
                     if (empty($path)) then
-                        map { "error": "Post not found: " || $slug, "status": 404 }
-                    else (
-                        xmldb:store(
-                            util:collection-name(util:binary-doc($path)),
-                            util:document-name(util:binary-doc($path)),
-                            $source,
-                            "text/markdown"
-                        ),
-                        map { "success": true(), "slug": $slug }
-                    )
+                        router:response(404, "application/json", map { "error": "Post not found: " || $slug }, ())
+                    else
+                        let $collection := replace($path, "/[^/]+$", "")
+                        let $filename := replace($path, "^.*/", "")
+                        let $_ := xmldb:store($collection, $filename, $source, "text/markdown")
+                        return map { "success": true(), "slug": $slug }
 };
 
 (:~
@@ -196,20 +195,18 @@ declare function admin:update-post($request as map(*)) {
  :)
 declare function admin:delete-post($request as map(*)) {
     if (not(admin:is-editor())) then
-        map { "error": "Forbidden", "status": 403 }
+        router:response(403, "application/json", map { "error": "Forbidden" }, ())
     else
         let $slug := $request?parameters?slug
         let $path := admin:resolve-slug($slug)
         return
             if (empty($path)) then
-                map { "error": "Post not found: " || $slug, "status": 404 }
-            else (
-                xmldb:remove(
-                    util:collection-name(util:binary-doc($path)),
-                    util:document-name(util:binary-doc($path))
-                ),
-                map { "success": true(), "deleted": $slug }
-            )
+                router:response(404, "application/json", map { "error": "Post not found: " || $slug }, ())
+            else
+                let $collection := replace($path, "/[^/]+$", "")
+                let $filename := replace($path, "^.*/", "")
+                let $_ := xmldb:remove($collection, $filename)
+                return map { "success": true(), "deleted": $slug }
 };
 
 (:~
@@ -222,22 +219,21 @@ declare function admin:delete-post($request as map(*)) {
  :)
 declare function admin:upload-image($request as map(*)) {
     if (not(admin:is-editor())) then
-        map { "error": "Forbidden", "status": 403 }
+        router:response(403, "application/json", map { "error": "Forbidden" }, ())
     else
         let $filename := $request?parameters?filename
         let $data := $request?body
         let $images-collection := $config:app-root || "/resources/images/posts"
-        return (
-            if (not(xmldb:collection-available($images-collection))) then
-                xmldb:create-collection($config:app-root || "/resources/images", "posts")
-            else (),
-
-            let $stored := xmldb:store($images-collection, $filename, $data)
+        return
+            let $_ :=
+                if (not(xmldb:collection-available($images-collection))) then
+                    xmldb:create-collection($config:app-root || "/resources/images", "posts")
+                else ()
+            let $_ := xmldb:store($images-collection, $filename, $data)
             return map {
                 "success": true(),
                 "url": $config:blog-base || "/resources/images/posts/" || $filename
             }
-        )
 };
 
 (:~

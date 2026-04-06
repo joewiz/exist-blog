@@ -113,25 +113,21 @@ else if ($exist:resource eq "logout") then (
 (: --- Admin: post management --- :)
 else if ($exist:path eq '/admin' or $exist:path eq '/admin/') then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/templates/admin/post-list.html"/>
-        <view>
-            <forward url="{$exist:controller}/modules/view.xq">
-                <set-attribute name="layout" value="full"/>
-                <set-attribute name="page-title" value="Admin"/>
-            </forward>
-        </view>
+        <forward url="{$exist:controller}/modules/view.xq">
+            <set-attribute name="template" value="templates/admin/post-list.tpl"/>
+            <set-attribute name="layout" value="full"/>
+            <set-attribute name="page-title" value="Admin"/>
+        </forward>
     </dispatch>
 
 (: --- Admin: editor (new or edit) --- :)
 else if (matches($exist:path, "^/admin/editor")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/templates/admin/editor.html"/>
-        <view>
-            <forward url="{$exist:controller}/modules/view.xq">
-                <set-attribute name="layout" value="full"/>
-                <set-attribute name="page-title" value="Editor"/>
-            </forward>
-        </view>
+        <forward url="{$exist:controller}/modules/view.xq">
+            <set-attribute name="template" value="templates/admin/editor.tpl"/>
+            <set-attribute name="layout" value="full"/>
+            <set-attribute name="page-title" value="Editor"/>
+        </forward>
     </dispatch>
 
 (: --- Static resources --- :)
@@ -147,26 +143,22 @@ else if (matches($exist:path, "^/tag/([^/]+)/?$")) then
     let $tag := replace($exist:path, "^/tag/([^/]+)/?$", "$1")
     return
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-            <forward url="{$exist:controller}/templates/tag-list.html"/>
-            <view>
-                <forward url="{$exist:controller}/modules/view.xq">
-                    <set-attribute name="layout" value="full"/>
-                    <set-attribute name="tag" value="{$tag}"/>
-                    <set-attribute name="page-title" value="Tag: {$tag}"/>
-                </forward>
-            </view>
+            <forward url="{$exist:controller}/modules/view.xq">
+                <set-attribute name="template" value="templates/tag-list.tpl"/>
+                <set-attribute name="layout" value="full"/>
+                <set-attribute name="tag" value="{$tag}"/>
+                <set-attribute name="page-title" value="Tag: {$tag}"/>
+            </forward>
         </dispatch>
 
 (: --- Archive: /archive --- :)
 else if ($exist:path eq '/archive' or $exist:path eq '/archive/') then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/templates/archive.html"/>
-        <view>
-            <forward url="{$exist:controller}/modules/view.xq">
-                <set-attribute name="layout" value="full"/>
-                <set-attribute name="page-title" value="Archive"/>
-            </forward>
-        </view>
+        <forward url="{$exist:controller}/modules/view.xq">
+            <set-attribute name="template" value="templates/archive.tpl"/>
+            <set-attribute name="layout" value="full"/>
+            <set-attribute name="page-title" value="Archive"/>
+        </forward>
     </dispatch>
 
 (: --- Archive by year: /2026 --- :)
@@ -174,14 +166,12 @@ else if (matches($exist:path, "^/(\d{4})/?$")) then
     let $year := replace($exist:path, "^/(\d{4})/?$", "$1")
     return
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-            <forward url="{$exist:controller}/templates/archive.html"/>
-            <view>
-                <forward url="{$exist:controller}/modules/view.xq">
-                    <set-attribute name="layout" value="full"/>
-                    <set-attribute name="year" value="{$year}"/>
-                    <set-attribute name="page-title" value="Archive: {$year}"/>
-                </forward>
-            </view>
+            <forward url="{$exist:controller}/modules/view.xq">
+                <set-attribute name="template" value="templates/archive.tpl"/>
+                <set-attribute name="layout" value="full"/>
+                <set-attribute name="year" value="{$year}"/>
+                <set-attribute name="page-title" value="Archive: {$year}"/>
+            </forward>
         </dispatch>
 
 (: --- Archive by year/month: /2026/03 --- :)
@@ -190,15 +180,26 @@ else if (matches($exist:path, "^/(\d{4})/(\d{2})/?$")) then
     let $month := replace($exist:path, "^/(\d{4})/(\d{2})/?$", "$2")
     return
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-            <forward url="{$exist:controller}/templates/archive.html"/>
-            <view>
-                <forward url="{$exist:controller}/modules/view.xq">
-                    <set-attribute name="layout" value="full"/>
-                    <set-attribute name="year" value="{$year}"/>
-                    <set-attribute name="month" value="{$month}"/>
-                    <set-attribute name="page-title" value="Archive: {$year}-{$month}"/>
-                </forward>
-            </view>
+            <forward url="{$exist:controller}/modules/view.xq">
+                <set-attribute name="template" value="templates/archive.tpl"/>
+                <set-attribute name="layout" value="full"/>
+                <set-attribute name="year" value="{$year}"/>
+                <set-attribute name="month" value="{$month}"/>
+                <set-attribute name="page-title" value="Archive: {$year}-{$month}"/>
+            </forward>
+        </dispatch>
+
+(: --- Archived post: /archive/{year}/{slug} --- :)
+else if (matches($exist:path, "^/archive/(\d{4})/([^/]+)$")) then
+    let $year := replace($exist:path, "^/archive/(\d{4})/([^/]+)$", "$1")
+    let $slug := replace($exist:path, "^/archive/(\d{4})/([^/]+)$", "$2")
+    return
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$exist:controller}/modules/view.xq">
+                <set-attribute name="template" value="templates/post-detail.tpl"/>
+                <set-attribute name="layout" value="full"/>
+                <set-attribute name="post-slug" value="archive/{$year}/{$slug}"/>
+            </forward>
         </dispatch>
 
 (: --- Single post: /{year}/{slug} --- :)
@@ -207,13 +208,11 @@ else if (matches($exist:path, "^/(\d{4})/([^/]+)$")) then
     let $slug := replace($exist:path, "^/(\d{4})/([^/]+)$", "$2")
     return
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-            <forward url="{$exist:controller}/templates/post-detail.html"/>
-            <view>
-                <forward url="{$exist:controller}/modules/view.xq">
-                    <set-attribute name="layout" value="full"/>
-                    <set-attribute name="post-slug" value="{$year}/{$slug}"/>
-                </forward>
-            </view>
+            <forward url="{$exist:controller}/modules/view.xq">
+                <set-attribute name="template" value="templates/post-detail.tpl"/>
+                <set-attribute name="layout" value="full"/>
+                <set-attribute name="post-slug" value="{$year}/{$slug}"/>
+            </forward>
         </dispatch>
 
 (: --- Paginated listing: /page/{n} --- :)
@@ -221,38 +220,32 @@ else if (matches($exist:path, "^/page/(\d+)/?$")) then
     let $page := replace($exist:path, "^/page/(\d+)/?$", "$1")
     return
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-            <forward url="{$exist:controller}/templates/post-list.html"/>
-            <view>
-                <forward url="{$exist:controller}/modules/view.xq">
-                    <set-attribute name="layout" value="full"/>
-                    <set-attribute name="page" value="{$page}"/>
-                    <set-attribute name="page-title" value="Page {$page}"/>
-                </forward>
-            </view>
+            <forward url="{$exist:controller}/modules/view.xq">
+                <set-attribute name="template" value="templates/post-list.tpl"/>
+                <set-attribute name="layout" value="full"/>
+                <set-attribute name="page" value="{$page}"/>
+                <set-attribute name="page-title" value="Page {$page}"/>
+            </forward>
         </dispatch>
 
 (: --- Blog index --- :)
 else if ($exist:path eq '/' or $exist:path eq '') then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/templates/post-list.html"/>
-        <view>
-            <forward url="{$exist:controller}/modules/view.xq">
-                <set-attribute name="layout" value="full"/>
-                <set-attribute name="page" value="1"/>
-            </forward>
-        </view>
+        <forward url="{$exist:controller}/modules/view.xq">
+            <set-attribute name="template" value="templates/post-list.tpl"/>
+            <set-attribute name="layout" value="full"/>
+            <set-attribute name="page" value="1"/>
+        </forward>
     </dispatch>
 
 (: --- 404 --- :)
 else (
     response:set-status-code(404),
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/templates/post-list.html"/>
-        <view>
-            <forward url="{$exist:controller}/modules/view.xq">
-                <set-attribute name="layout" value="full"/>
-                <set-attribute name="page-title" value="Not Found"/>
-            </forward>
-        </view>
+        <forward url="{$exist:controller}/modules/view.xq">
+            <set-attribute name="template" value="templates/post-list.tpl"/>
+            <set-attribute name="layout" value="full"/>
+            <set-attribute name="page-title" value="Not Found"/>
+        </forward>
     </dispatch>
 )

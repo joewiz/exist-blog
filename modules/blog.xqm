@@ -200,6 +200,7 @@ declare function blog:get-archive() as map(*)* {
 
 (:~
  : Recursively find all .md files in a collection.
+ : Excludes the wiki-import directory (migration source data).
  :)
 declare function blog:find-markdown-files($collection as xs:string) as xs:string* {
     (
@@ -208,29 +209,70 @@ declare function blog:find-markdown-files($collection as xs:string) as xs:string
         return $collection || "/" || $resource,
 
         for $child in xmldb:get-child-collections($collection)
+        where $child ne "wiki-import"
         return blog:find-markdown-files($collection || "/" || $child)
     )
 };
+
+(:~ Namespace URI for exist-markdown module :)
+declare variable $blog:MD_NS := "http://exist-db.org/xquery/markdown";
+
+(:~ Java class for dynamic import of exist-markdown :)
+declare variable $blog:MD_CLASS := "java:org.exist.xquery.modules.markdown.MarkdownModule";
 
 (:~
  : Render Markdown to HTML.
  : Uses exist-markdown-3.0.0 if available, otherwise falls back to basic rendering.
  :)
 declare function blog:render-markdown($markdown as xs:string) as node()* {
-    try {
-        let $parsed := blog:md-parse($markdown)
-        return blog:md-to-html($parsed)
-    } catch * {
-        (: Fallback: wrap raw markdown in a pre tag :)
-        <div class="markdown-raw"><pre>{ $markdown }</pre></div>
-    }
+    let $parse-fn := blog:md-function("parse", 1)
+    let $html-fn := blog:md-function("to-html", 1)
+    (: Normalize line endings :)
+    let $normalized := replace($markdown, "\r\n?", "&#10;")
+    (: Strip HTML block wrapper tags (div, section, etc.) so flexmark
+       processes all content as Markdown. The wrappers are purely structural
+       from old AtomicWiki layouts and not needed in the blog. :)
+    let $normalized := replace($normalized, "<(?:/)?(?:div|section|article|body|aside|nav|footer|header)(?:\s[^>]*)?>[\s]*", "")
+    return
+        if (exists($parse-fn) and exists($html-fn)) then
+            (: Run through exist-markdown (handles Markdown + inline HTML) :)
+            let $rendered := $html-fn($parse-fn($normalized))
+            (: exist-markdown entity-escapes HTML block tags — unescape them :)
+            let $html-str := serialize($rendered)
+            let $unescaped := blog:unescape-html-tags($html-str)
+            return
+                try { parse-xml-fragment($unescaped) }
+                catch * { $rendered }
+        else
+            <div class="markdown-raw"><pre>{ $markdown }</pre></div>
 };
 
 (:~
- : Call md:parse() dynamically to avoid hard compile-time dependency.
+ : Unescape common HTML block/inline tags that exist-markdown entity-escapes.
+ : Converts &lt;div&gt; back to <div>, etc.
  :)
+declare function blog:unescape-html-tags($html as xs:string) as xs:string {
+    $html
+    => replace("&amp;lt;", "&lt;")
+    => replace("&amp;gt;", "&gt;")
+    => replace("&amp;amp;", "&amp;")
+};
+
+(:~
+ : Look up an exist-markdown function by local name and arity.
+ : Dynamically imports the Java module to avoid a hard compile-time dependency.
+ :)
+declare function blog:md-function($local-name as xs:string, $arity as xs:integer) as function(*)? {
+    try {
+        util:import-module(xs:anyURI($blog:MD_NS), "md", xs:anyURI($blog:MD_CLASS)),
+        function-lookup(QName($blog:MD_NS, $local-name), $arity)
+    } catch * {
+        ()
+    }
+};
+
 declare function blog:md-parse($markdown as xs:string) as node() {
-    let $fn := function-lookup(xs:QName("md:parse"), 1)
+    let $fn := blog:md-function("parse", 1)
     return
         if (exists($fn)) then
             $fn($markdown)
@@ -238,11 +280,8 @@ declare function blog:md-parse($markdown as xs:string) as node() {
             error(xs:QName("blog:NO_MARKDOWN"), "exist-markdown module not available")
 };
 
-(:~
- : Call md:to-html() dynamically.
- :)
 declare function blog:md-to-html($parsed as node()) as node()* {
-    let $fn := function-lookup(xs:QName("md:to-html"), 1)
+    let $fn := blog:md-function("to-html", 1)
     return
         if (exists($fn)) then
             $fn($parsed)

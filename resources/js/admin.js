@@ -2,7 +2,8 @@
  * Admin post management — loads post list from API and provides CRUD actions.
  */
 
-const API_BASE = "api";
+const BLOG_BASE = document.querySelector("script[data-base]")?.dataset.base || "";
+const API_BASE = BLOG_BASE + "/api";
 
 async function loadPosts() {
   const resp = await fetch(`${API_BASE}/posts`, {
@@ -33,12 +34,12 @@ function renderPostTable(posts) {
     const statusClass =
       post.status === "published" ? "status-published" : "status-draft";
     tr.innerHTML = `
-      <td><a href="admin/editor/${post.slug}">${escapeHtml(post.title || "Untitled")}</a></td>
+      <td><a href="${BLOG_BASE}/admin/editor/${escapeAttr(post.slug)}">${escapeHtml(post.title || "Untitled")}</a></td>
       <td>${escapeHtml(post.date || "")}</td>
       <td>${escapeHtml(post.author || "")}</td>
       <td><span class="${statusClass}">${post.status || "published"}</span></td>
       <td>
-        <a href="admin/editor/${post.slug}" class="btn btn-small">Edit</a>
+        <a href="${BLOG_BASE}/admin/editor/${escapeAttr(post.slug)}" class="btn btn-small">Edit</a>
         <button class="btn btn-danger btn-small" data-slug="${escapeAttr(post.slug)}">Delete</button>
       </td>
     `;

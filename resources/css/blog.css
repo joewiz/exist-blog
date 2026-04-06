@@ -1,5 +1,9 @@
 /* ============================================
  * exist-blog — Blog stylesheet
+ *
+ * Site shell (nav bar, footer, base layout) is
+ * provided by exist-site-shell's site.css.
+ * This file only contains blog-specific styles.
  * ============================================ */
 
 /* Layout */

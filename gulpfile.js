@@ -3,7 +3,7 @@
  * Copyright (C) 2001-2026 The eXist-db Authors
  */
 import { src, dest, series, parallel, watch as gulpWatch } from "gulp";
-import { createClient, readOptionsFromEnv } from "@existdb/gulp-exist";
+import { createClient } from "@existdb/gulp-exist";
 import replace from "@existdb/gulp-replace-tmpl";
 import rename from "gulp-rename";
 import zip from "gulp-zip";
@@ -16,14 +16,30 @@ const { version, license, app } = packageJson;
 // template replacements: first value wins
 const replacements = [app, { version, license }];
 
-const defaultOptions = { basic_auth: { user: "admin", pass: "" } };
-const connectionOptions = Object.assign(defaultOptions, readOptionsFromEnv());
+// Read connection settings from .existdb.json
+function readExistConfig() {
+  try {
+    const config = JSON.parse(readFileSync(".existdb.json", "utf-8"));
+    const serverName = config.sync?.server || Object.keys(config.servers)[0];
+    const server = config.servers[serverName];
+    // gulp-exist expects host/port separately
+    const url = new URL(server.server);
+    return {
+      host: url.hostname,
+      port: url.port || (url.protocol === "https:" ? "443" : "8080"),
+      secure: url.protocol === "https:",
+      basic_auth: { user: server.user, pass: server.password || "" },
+    };
+  } catch {
+    return { basic_auth: { user: "admin", pass: "" } };
+  }
+}
 
 let existClient;
 try {
-  existClient = createClient(connectionOptions);
+  existClient = createClient(readExistConfig());
 } catch (e) {
-  // client creation may fail if server is not available; OK for build-only usage
+  // client creation may fail if server is unreachable; OK for build-only usage
 }
 
 const packageFilename = `blog-${version}.xar`;
@@ -49,6 +65,7 @@ export { clean };
 function copyXarSources() {
   return src([
     "controller.xq",
+    "finish.xq",
     "collection.xconf",
     "pre-install.xq",
     "modules/**/*",

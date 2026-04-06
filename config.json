@@ -1,0 +1,18 @@
+{
+    "label": "Blog",
+    "id": "http://exist-db.org/apps/blog",
+    "description": "eXist-db project blog",
+    "extends": ["exist-site"],
+    "pkg": {
+        "abbrev": "blog",
+        "version": "1.0.0-SNAPSHOT"
+    },
+    "nav": {
+        "items": [
+            { "abbrev": "dashboard", "title": "Dashboard" },
+            { "abbrev": "docs", "title": "Documentation" },
+            { "abbrev": "notebook", "title": "Notebook" },
+            { "abbrev": "blog", "title": "Blog" }
+        ]
+    }
+}

@@ -4,9 +4,10 @@ xquery version "3.1";
  : Migration module: converts AtomicWiki content to Markdown blog posts.
  :
  : AtomicWiki stores entries as Atom XML files (*.atom) with separate content
- : files (*.html or *.md). This module reads those entries from
- : /db/apps/wiki/data/ and converts them to Markdown files with YAML front matter
- : in the blog's data/posts/ collection.
+ : files (*.html or *.md). This module reads those entries from either:
+ :   1. The bundled wiki-import data at $config:app-root/data/wiki-import/blogs/
+ :   2. A running AtomicWiki instance at /db/apps/wiki/data/ (fallback)
+ : and converts them to Markdown files with YAML front matter in data/posts/.
  :
  : Content types handled:
  :   - "markdown" (wiki:editor = "markdown") — content is already .md, copy with new front matter
@@ -19,24 +20,34 @@ module namespace migrate="http://exist-db.org/apps/blog/migrate";
 
 import module namespace config="http://exist-db.org/apps/blog/config" at "config.xqm";
 import module namespace blog="http://exist-db.org/apps/blog" at "blog.xqm";
+import module namespace router="http://e-editiones.org/roaster/router";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace wiki="http://exist-db.org/xquery/wiki";
 
-(:~ Root collection of the old AtomicWiki data :)
-declare variable $migrate:wiki-root := "/db/apps/wiki/data";
+(:~ Root collection of the old AtomicWiki data — try bundled first, then external :)
+declare variable $migrate:wiki-root :=
+    let $bundled := $config:app-root || "/data/wiki-import/blogs"
+    let $external := "/db/apps/wiki/data"
+    return
+        if (xmldb:collection-available($bundled)) then $bundled
+        else $external
+;
 
 (:~
  : API entry point: run the migration.
  : Restricted to DBA users.
  :)
 declare function migrate:run($request as map(*)) {
-    let $user := request:get-attribute("org.exist.login.user")
+    let $user := (
+        request:get-attribute("org.exist.login.user"),
+        sm:id()//sm:real/sm:username/string()
+    )[1]
     return
-        if (empty($user) or not(sm:is-dba($user))) then
-            map { "error": "Forbidden — DBA access required", "status": 403 }
+        if (empty($user) or $user eq "guest" or not(sm:is-dba($user))) then
+            router:response(403, "application/json", map { "error": "Forbidden — DBA access required" }, ())
         else if (not(xmldb:collection-available($migrate:wiki-root))) then
-            map { "error": "AtomicWiki data not found at " || $migrate:wiki-root, "status": 404 }
+            router:response(404, "application/json", map { "error": "AtomicWiki data not found. Checked: " || $config:app-root || "/data/wiki-import/blogs and /db/apps/wiki/data" }, ())
         else
             let $entries := migrate:find-all-entries()
             let $results :=
@@ -47,6 +58,7 @@ declare function migrate:run($request as map(*)) {
             let $review := $results[?status eq "needs-review"]
             let $errors := $results[?status eq "error"]
             return map {
+                "source": $migrate:wiki-root,
                 "total": count($results),
                 "migrated": count($migrated),
                 "skipped": count($skipped),
@@ -73,7 +85,7 @@ declare function migrate:convert-entry($entry as element(atom:entry)) as map(*) 
     let $updated := $entry/atom:updated/string()
     let $author := ($entry/atom:author/atom:name/string(), "Unknown")[1]
     let $editor-type := ($entry/wiki:editor/string(), "html")[1]
-    let $category := $entry/atom:category/@term/string()
+    let $category := string-join($entry/atom:category/@term/string(), ", ")
     let $content-ref := $entry/atom:content
     let $content-type := ($content-ref/@type/string(), "html")[1]
     let $content-src := $content-ref/@src/string()
@@ -115,7 +127,7 @@ declare function migrate:convert-entry($entry as element(atom:entry)) as map(*) 
 
             (: Build front matter :)
             let $tags :=
-                if ($category) then "[" || $category || "]"
+                if ($category ne "") then "[" || $category || "]"
                 else "[]"
             let $review-note :=
                 if ($markdown?review) then
@@ -149,25 +161,24 @@ declare function migrate:convert-entry($entry as element(atom:entry)) as map(*) 
                         "slug": "archive/" || $year || "/" || $slug,
                         "reason": "Already exists"
                     }
-                else (
-                    (: Ensure collection exists :)
-                    if (xmldb:collection-available($target-collection)) then ()
-                    else (
-                        if (not(xmldb:collection-available($config:posts-root || "/archive"))) then
-                            xmldb:create-collection($config:posts-root, "archive")
-                        else (),
-                        xmldb:create-collection($config:posts-root || "/archive", $year)
-                    ),
-
-                    xmldb:store($target-collection, $filename, $full-markdown, "text/markdown"),
-
-                    map {
+                else
+                    let $_ := (
+                        (: Ensure collection exists :)
+                        if (xmldb:collection-available($target-collection)) then ()
+                        else (
+                            if (not(xmldb:collection-available($config:posts-root || "/archive"))) then
+                                xmldb:create-collection($config:posts-root, "archive")
+                            else (),
+                            xmldb:create-collection($config:posts-root || "/archive", $year)
+                        ),
+                        xmldb:store($target-collection, $filename, $full-markdown, "text/markdown")
+                    )
+                    return map {
                         "status": if ($markdown?review) then "needs-review" else "migrated",
                         "slug": "archive/" || $year || "/" || $slug,
                         "title": $title,
                         "original-type": $content-type
                     }
-                )
         } catch * {
             map {
                 "status": "error",
@@ -189,7 +200,8 @@ declare function migrate:load-content($collection as xs:string, $src as xs:strin
             if (util:binary-doc-available($path)) then
                 util:binary-to-string(util:binary-doc($path))
             else if (doc-available($path)) then
-                serialize(doc($path)/*)
+                (: Serialize HTML content without entity-escaping tags :)
+                serialize(doc($path)/*, map { "method": "html", "indent": false() })
             else
                 "(Content file not found: " || $src || ")"
     else

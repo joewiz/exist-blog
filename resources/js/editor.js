@@ -1,16 +1,11 @@
 /**
  * Markdown editor with live preview.
- *
- * - For new posts: blank form
- * - For existing posts: loads source from API and populates fields
- * - Live preview using a simple Markdown-to-HTML conversion (client-side)
- * - Save/publish sends to the Roaster API
  */
 
-const API_BASE = "api";
+const BLOG_BASE = document.querySelector("script[data-base]")?.dataset.base || "";
+const API_BASE = BLOG_BASE + "/api";
 
-// Detect if we're editing an existing post from the URL
-// URL pattern: /admin/editor/{year}/{slug}
+// Detect if editing an existing post
 const pathParts = window.location.pathname.split("/admin/editor/");
 const editSlug = pathParts.length > 1 ? pathParts[1].replace(/\/$/, "") : null;
 
@@ -69,19 +64,11 @@ if (sourceEl) {
 
 function updatePreview() {
   if (!sourceEl || !previewEl) return;
-  // Simple client-side Markdown rendering for preview
   previewEl.innerHTML = simpleMarkdownToHtml(sourceEl.value);
-  // Re-highlight code blocks if highlight.js is loaded
-  if (window.hljs) {
-    previewEl.querySelectorAll("pre code").forEach((block) => {
-      hljs.highlightElement(block);
-    });
-  }
 }
 
 /**
  * Minimal Markdown-to-HTML for live preview.
- * Not a full parser — just enough for a usable preview.
  */
 function simpleMarkdownToHtml(md) {
   let html = md
@@ -115,7 +102,6 @@ function simpleMarkdownToHtml(md) {
 
   // Wrap list items
   html = html.replace(/(<li>[\s\S]*?<\/li>)/g, "<ul>$1</ul>");
-  // Deduplicate nested <ul> wrappers
   html = html.replace(/<\/ul>\s*<ul>/g, "");
 
   return `<p>${html}</p>`;
@@ -144,7 +130,7 @@ async function savePost(status) {
     .filter(Boolean);
 
   if (editSlug) {
-    // Update existing post — rebuild the full Markdown source with front matter
+    // Update existing post
     const frontMatter = buildFrontMatter(title, dateEl.value, authorEl.value, tags,
       categoryEl.value, summaryEl.value, status);
     const source = frontMatter + "\n\n" + sourceEl.value;
@@ -184,7 +170,7 @@ async function savePost(status) {
     if (resp.ok) {
       const result = await resp.json();
       alert("Post created!");
-      window.location.href = `admin/editor/${result.slug}`;
+      window.location.href = `${BLOG_BASE}/admin/editor/${result.slug}`;
     } else {
       const err = await resp.json();
       alert("Error: " + (err.error || resp.status));
