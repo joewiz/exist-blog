@@ -37,7 +37,8 @@ declare variable $local:templating-config := map {
 
 (:~ Is the profile's base template available? :)
 declare variable $local:profile-available :=
-    util:binary-doc-available($config:app-root || "/templates/base-page.html");
+    let $path := $config:app-root || "/templates/base-page.html"
+    return util:binary-doc-available($path) or doc-available($path);
 
 (:~
  : Load a resource as a string.
