@@ -1,0 +1,20 @@
+xquery version "3.1";
+
+(:~
+ : Roaster API entry point for the blog.
+ : Routes are defined in api.json (OpenAPI spec) and dispatched
+ : to functions in admin.xqm, feed.xqm, etc.
+ :)
+
+import module namespace roaster="http://e-editiones.org/roaster";
+import module namespace admin="http://exist-db.org/apps/blog/admin" at "admin.xqm";
+import module namespace blog="http://exist-db.org/apps/blog" at "blog.xqm";
+import module namespace feed="http://exist-db.org/apps/blog/feed" at "feed.xqm";
+import module namespace sitemap="http://exist-db.org/apps/blog/sitemap" at "sitemap.xqm";
+import module namespace migrate="http://exist-db.org/apps/blog/migrate" at "migrate.xqm";
+
+let $api-spec := json-doc(system:get-module-load-path() || "/api.json")
+return
+    roaster:route($api-spec, function($name as xs:string) {
+        function-lookup(xs:QName($name), 1)
+    })

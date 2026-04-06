@@ -1,0 +1,258 @@
+xquery version "3.1";
+
+(:~
+ : URL routing for the blog application.
+ :
+ : Public routes:
+ :   /                        → post listing (page 1)
+ :   /page/{n}                → post listing page n
+ :   /tag/{tag}               → posts filtered by tag
+ :   /tag/{tag}/feed.xml      → per-tag Atom feed
+ :   /{year}/{slug}           → single post (e.g., /2026/03-exist-7-preview)
+ :   /{year}/{month}          → archive by year/month
+ :   /{year}                  → archive by year
+ :   /archive                 → full archive
+ :   /feed.xml                → Atom feed
+ :   /sitemap.xml             → XML sitemap
+ :
+ : Admin routes (DBA / blog-editor):
+ :   /admin                   → admin post list
+ :   /admin/editor             → new post editor
+ :   /admin/editor/{slug}     → edit existing post
+ :
+ : API routes:
+ :   /api/*                   → Roaster REST API
+ :)
+
+import module namespace login="http://exist-db.org/xquery/login"
+    at "resource:org/exist/xquery/modules/persistentlogin/login.xql";
+import module namespace blog="http://exist-db.org/apps/blog" at "modules/blog.xqm";
+import module namespace feed="http://exist-db.org/apps/blog/feed" at "modules/feed.xqm";
+import module namespace sitemap="http://exist-db.org/apps/blog/sitemap" at "modules/sitemap.xqm";
+
+declare namespace atom="http://www.w3.org/2005/Atom";
+declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
+
+declare variable $exist:path external;
+declare variable $exist:resource external;
+declare variable $exist:controller external;
+declare variable $exist:prefix external;
+declare variable $exist:root external;
+
+declare variable $local:login-domain := "org.exist.login";
+
+(: Process persistent login on every request :)
+let $login := login:set-user($local:login-domain, xs:dayTimeDuration("P7D"), false())
+let $user := request:get-attribute($local:login-domain || ".user")
+let $method := lower-case(request:get-method())
+
+return
+
+(: --- Trailing-slash redirect --- :)
+if ($exist:path eq '') then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <redirect url="{request:get-uri()}/"/>
+    </dispatch>
+
+(: --- Atom feed --- :)
+else if ($exist:path eq '/feed.xml') then (
+    util:declare-option("exist:serialize", "method=xml media-type=application/atom+xml indent=yes"),
+    feed:generate((), ())
+)
+
+(: --- Per-tag Atom feed: /tag/{tag}/feed.xml --- :)
+else if (matches($exist:path, "^/tag/([^/]+)/feed\.xml$")) then
+    let $tag := replace($exist:path, "^/tag/([^/]+)/feed\.xml$", "$1")
+    return (
+        util:declare-option("exist:serialize", "method=xml media-type=application/atom+xml indent=yes"),
+        feed:generate($tag, ())
+    )
+
+(: --- XML sitemap --- :)
+else if ($exist:path eq '/sitemap.xml') then (
+    util:declare-option("exist:serialize", "method=xml media-type=application/xml indent=yes"),
+    sitemap:generate()
+)
+
+(: --- API routes → Roaster --- :)
+else if (starts-with($exist:path, "/api/")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/modules/api.xq">
+            <set-header name="Access-Control-Allow-Origin" value="*"/>
+            <set-header name="Cache-Control" value="no-cache"/>
+        </forward>
+    </dispatch>
+
+(: --- Login --- :)
+else if ($exist:resource eq "login" and $method eq "post") then (
+    try {
+        util:declare-option("exist:serialize", "method=json"),
+        if ($user and not($user = ("guest", "nobody"))) then
+            <status xmlns:json="http://www.json.org">
+                <user>{$user}</user>
+                <dba json:literal="true">{sm:is-dba($user)}</dba>
+            </status>
+        else (
+            response:set-status-code(401),
+            <status><error>unauthorized</error></status>
+        )
+    } catch * {
+        response:set-status-code(401),
+        <status><error>{$err:description}</error></status>
+    }
+)
+
+(: --- Logout --- :)
+else if ($exist:resource eq "logout") then (
+    session:invalidate(),
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <redirect url="./"/>
+    </dispatch>
+)
+
+(: --- Admin: post management --- :)
+else if ($exist:path eq '/admin' or $exist:path eq '/admin/') then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/templates/admin/post-list.html"/>
+        <view>
+            <forward url="{$exist:controller}/modules/view.xq">
+                <set-attribute name="layout" value="full"/>
+                <set-attribute name="page-title" value="Admin"/>
+            </forward>
+        </view>
+    </dispatch>
+
+(: --- Admin: editor (new or edit) --- :)
+else if (matches($exist:path, "^/admin/editor")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/templates/admin/editor.html"/>
+        <view>
+            <forward url="{$exist:controller}/modules/view.xq">
+                <set-attribute name="layout" value="full"/>
+                <set-attribute name="page-title" value="Editor"/>
+            </forward>
+        </view>
+    </dispatch>
+
+(: --- Static resources --- :)
+else if (matches($exist:path, "^/resources/")) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}{$exist:path}">
+            <set-header name="Cache-Control" value="max-age=3600, must-revalidate"/>
+        </forward>
+    </dispatch>
+
+(: --- Tag listing: /tag/{tag} --- :)
+else if (matches($exist:path, "^/tag/([^/]+)/?$")) then
+    let $tag := replace($exist:path, "^/tag/([^/]+)/?$", "$1")
+    return
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$exist:controller}/templates/tag-list.html"/>
+            <view>
+                <forward url="{$exist:controller}/modules/view.xq">
+                    <set-attribute name="layout" value="full"/>
+                    <set-attribute name="tag" value="{$tag}"/>
+                    <set-attribute name="page-title" value="Tag: {$tag}"/>
+                </forward>
+            </view>
+        </dispatch>
+
+(: --- Archive: /archive --- :)
+else if ($exist:path eq '/archive' or $exist:path eq '/archive/') then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/templates/archive.html"/>
+        <view>
+            <forward url="{$exist:controller}/modules/view.xq">
+                <set-attribute name="layout" value="full"/>
+                <set-attribute name="page-title" value="Archive"/>
+            </forward>
+        </view>
+    </dispatch>
+
+(: --- Archive by year: /2026 --- :)
+else if (matches($exist:path, "^/(\d{4})/?$")) then
+    let $year := replace($exist:path, "^/(\d{4})/?$", "$1")
+    return
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$exist:controller}/templates/archive.html"/>
+            <view>
+                <forward url="{$exist:controller}/modules/view.xq">
+                    <set-attribute name="layout" value="full"/>
+                    <set-attribute name="year" value="{$year}"/>
+                    <set-attribute name="page-title" value="Archive: {$year}"/>
+                </forward>
+            </view>
+        </dispatch>
+
+(: --- Archive by year/month: /2026/03 --- :)
+else if (matches($exist:path, "^/(\d{4})/(\d{2})/?$")) then
+    let $year := replace($exist:path, "^/(\d{4})/(\d{2})/?$", "$1")
+    let $month := replace($exist:path, "^/(\d{4})/(\d{2})/?$", "$2")
+    return
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$exist:controller}/templates/archive.html"/>
+            <view>
+                <forward url="{$exist:controller}/modules/view.xq">
+                    <set-attribute name="layout" value="full"/>
+                    <set-attribute name="year" value="{$year}"/>
+                    <set-attribute name="month" value="{$month}"/>
+                    <set-attribute name="page-title" value="Archive: {$year}-{$month}"/>
+                </forward>
+            </view>
+        </dispatch>
+
+(: --- Single post: /{year}/{slug} --- :)
+else if (matches($exist:path, "^/(\d{4})/([^/]+)$")) then
+    let $year := replace($exist:path, "^/(\d{4})/([^/]+)$", "$1")
+    let $slug := replace($exist:path, "^/(\d{4})/([^/]+)$", "$2")
+    return
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$exist:controller}/templates/post-detail.html"/>
+            <view>
+                <forward url="{$exist:controller}/modules/view.xq">
+                    <set-attribute name="layout" value="full"/>
+                    <set-attribute name="post-slug" value="{$year}/{$slug}"/>
+                </forward>
+            </view>
+        </dispatch>
+
+(: --- Paginated listing: /page/{n} --- :)
+else if (matches($exist:path, "^/page/(\d+)/?$")) then
+    let $page := replace($exist:path, "^/page/(\d+)/?$", "$1")
+    return
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$exist:controller}/templates/post-list.html"/>
+            <view>
+                <forward url="{$exist:controller}/modules/view.xq">
+                    <set-attribute name="layout" value="full"/>
+                    <set-attribute name="page" value="{$page}"/>
+                    <set-attribute name="page-title" value="Page {$page}"/>
+                </forward>
+            </view>
+        </dispatch>
+
+(: --- Blog index --- :)
+else if ($exist:path eq '/' or $exist:path eq '') then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/templates/post-list.html"/>
+        <view>
+            <forward url="{$exist:controller}/modules/view.xq">
+                <set-attribute name="layout" value="full"/>
+                <set-attribute name="page" value="1"/>
+            </forward>
+        </view>
+    </dispatch>
+
+(: --- 404 --- :)
+else (
+    response:set-status-code(404),
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/templates/post-list.html"/>
+        <view>
+            <forward url="{$exist:controller}/modules/view.xq">
+                <set-attribute name="layout" value="full"/>
+                <set-attribute name="page-title" value="Not Found"/>
+            </forward>
+        </view>
+    </dispatch>
+)

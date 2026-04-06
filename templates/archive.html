@@ -1,0 +1,46 @@
+<div data-template="app:archive-list">
+    <header class="blog-header">
+        <h1>Archive
+            <span data-template="lib:value" data-template-value="
+                if ($model?filter-year and $model?filter-month) then
+                    ': ' || $model?filter-year || '-' || $model?filter-month
+                else if ($model?filter-year) then
+                    ': ' || $model?filter-year
+                else
+                    ''
+            "/>
+        </h1>
+        <p><a href="./">Back to blog</a></p>
+    </header>
+
+    <div class="blog-layout">
+        <main class="post-list">
+            <div data-template="app:each-post">
+                <article class="post-summary post-summary-compact">
+                    <h3 class="post-title">
+                        <a data-template="lib:attr" data-template-attr="href"
+                           data-template-value="app:post-field($model, 'url')"
+                           href="#">
+                            <span data-template="app:post-field" data-template-field="title"/>
+                        </a>
+                    </h3>
+                    <div class="post-meta">
+                        <time data-template="app:post-field" data-template-field="date"/>
+                        <span class="post-author">
+                            by <span data-template="app:post-field" data-template-field="author"/>
+                        </span>
+                    </div>
+                </article>
+            </div>
+        </main>
+
+        <aside class="blog-sidebar">
+            <section class="sidebar-section">
+                <h3>Browse by Month</h3>
+                <ul class="archive-months" data-template="app:each-tag">
+                    <!-- Reusing iteration; archive-groups are passed as tags in the model -->
+                </ul>
+            </section>
+        </aside>
+    </div>
+</div>

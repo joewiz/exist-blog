@@ -1,0 +1,37 @@
+<div data-template="app:post-list">
+    <header class="blog-header">
+        <h1>Posts tagged:
+            <span data-template="lib:value" data-template-value="$model?tag"/>
+        </h1>
+        <p><a href="../">View all posts</a></p>
+    </header>
+
+    <main class="post-list">
+        <div data-template="app:each-post">
+            <article class="post-summary">
+                <h2 class="post-title">
+                    <a data-template="lib:attr" data-template-attr="href"
+                       data-template-value="app:post-field($model, 'url')"
+                       href="#">
+                        <span data-template="app:post-field" data-template-field="title"/>
+                    </a>
+                </h2>
+                <div class="post-meta">
+                    <time data-template="app:post-field" data-template-field="date"/>
+                    <span class="post-author">
+                        by <span data-template="app:post-field" data-template-field="author"/>
+                    </span>
+                </div>
+                <p class="post-excerpt" data-template="app:post-field" data-template-field="summary"/>
+            </article>
+        </div>
+
+        <div data-template="app:pagination"/>
+    </main>
+
+    <p class="feed-link-container">
+        <a data-template="lib:attr" data-template-attr="href"
+           data-template-value="'tag/' || $model?tag || '/feed.xml'"
+           href="#">Atom feed for this tag</a>
+    </p>
+</div>

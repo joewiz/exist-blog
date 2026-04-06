@@ -1,0 +1,164 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "exist-blog API",
+    "version": "1.0.0",
+    "description": "REST API for the eXist-db blog application"
+  },
+  "servers": [
+    {
+      "url": "/exist/apps/blog/api",
+      "description": "Blog API"
+    }
+  ],
+  "paths": {
+    "/posts": {
+      "get": {
+        "operationId": "admin:list-posts",
+        "summary": "List all posts (admin)",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": { "type": "string", "default": "all" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "List of posts" }
+        }
+      },
+      "post": {
+        "operationId": "admin:create-post",
+        "summary": "Create a new blog post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "content"],
+                "properties": {
+                  "title": { "type": "string" },
+                  "date": { "type": "string", "format": "date" },
+                  "author": { "type": "string" },
+                  "tags": { "type": "array", "items": { "type": "string" } },
+                  "category": { "type": "string" },
+                  "summary": { "type": "string" },
+                  "status": { "type": "string", "enum": ["draft", "published"] },
+                  "slug": { "type": "string" },
+                  "content": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Post created" },
+          "403": { "description": "Forbidden" },
+          "409": { "description": "Post already exists" }
+        }
+      }
+    },
+    "/posts/{slug}": {
+      "get": {
+        "operationId": "admin:get-post",
+        "summary": "Get a post's raw Markdown source",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Post data" },
+          "404": { "description": "Not found" }
+        }
+      },
+      "put": {
+        "operationId": "admin:update-post",
+        "summary": "Update an existing blog post",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["source"],
+                "properties": {
+                  "source": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Post updated" },
+          "404": { "description": "Not found" }
+        }
+      },
+      "delete": {
+        "operationId": "admin:delete-post",
+        "summary": "Delete a blog post",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Post deleted" },
+          "404": { "description": "Not found" }
+        }
+      }
+    },
+    "/images": {
+      "post": {
+        "operationId": "admin:upload-image",
+        "summary": "Upload an image",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": { "type": "string", "format": "binary" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Image uploaded" }
+        }
+      }
+    },
+    "/migrate": {
+      "post": {
+        "operationId": "migrate:run",
+        "summary": "Migrate AtomicWiki content to blog posts (DBA only)",
+        "responses": {
+          "200": { "description": "Migration results" },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    }
+  }
+}

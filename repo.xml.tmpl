@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meta xmlns="http://exist-db.org/xquery/repo">
+    <description>@description@</description>
+    <author>@author@</author>
+    <website>@website@</website>
+    <status>@status@</status>
+    <license>@license@</license>
+    <copyright>true</copyright>
+    <type>application</type>
+    <target>@target@</target>
+    <permissions user="admin" group="dba" mode="rw-rw-r--"/>
+    <prepare>pre-install.xq</prepare>
+    <finish/>
+    <changelog>
+        <change version="1.0.0">
+            <ul xmlns="http://www.w3.org/1999/xhtml">
+                <li>Initial release: Markdown blog replacing AtomicWiki</li>
+                <li>Jinks templates with site-shell integration</li>
+                <li>Atom feed generation, tag/archive browsing</li>
+                <li>Admin editor with live Markdown preview</li>
+                <li>AtomicWiki content migration script</li>
+            </ul>
+        </change>
+    </changelog>
+</meta>
