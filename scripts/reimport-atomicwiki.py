@@ -310,7 +310,7 @@ def main():
             continue
 
         year = meta["date"][:4]
-        slug = slug_from_wiki_id(meta["wiki_id"])
+        slug = meta["wiki_id"]
 
         # Find content file (HTML or Markdown)
         html_src = meta["html_src"]
