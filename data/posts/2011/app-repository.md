@@ -15,28 +15,5 @@ There are many different paths to create an application with eXist, which is goo
 
 Upon request, I created a short screencast to demonstrate how simple it is to use the package repository to install entire applications into eXist. This is just a teaser and does not explain how to actually create app packages. I have a longer video in the pipeline which explains just that (eXide actually handles most of the setup work for you).
 
-<div style="margin: 15px auto; text-align: center;">
-
-<div class="iframe">
-
-<div id="player">
-
-</div>
-
-<div class="player-unavailable">
-
-# An error occurred.
-
-<div class="submessage">
-
-Unable to execute JavaScript.
-
-</div>
-
-</div>
-
-</div>
-
-</div>
 
 For the next release of eXist, we plan to ship all example code and parts of the documentation as apps, which can be installed on demand. This will lead to a cleaner installation and make it easier for people to find their way through the examples.

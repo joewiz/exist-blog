@@ -15,8 +15,6 @@ Higher-order functions are probably the most notable addition to the XQuery lang
 
 As of April 2012, eXist-db completely supports higher-order functions, including features like inline functions, closures and partial function application. This article will quickly walk through each feature before we put them all together in a practical example.
 
-<div class="section">
-
 # Function References
 
 A higher-order function is a function which takes another function as parameter or returns a function. So the first thing you'll need in order to pass a function around is a way to obtain a reference to a function.
@@ -205,4 +203,3 @@ eXist-db provided ways to dynamically call functions since several years, based 
 
 We made sure the new XQuery 3.0 higher-order function implementation is backwards compatible (though a lot more powerful), so old code will continue to work and migration is smooth.
 
-</div>

@@ -12,15 +12,11 @@ original-id: "eXistdb641"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/eXistdb641"
 ---
 
-<div class="section">
-
 ## Release Notes
 
 We are pleased to announce version 6.4.1 of eXist-db. This is a small patch release, that addresses minor issues found in the last release.
 
 **Note:** Unfortunately, the MacOS DMG is still not accepted by the Gatekeeper. This will be addressed with the next major version of eXist-db.
-
-<div class="section">
 
 ### Bug Fixes
 
@@ -43,6 +39,3 @@ We are pleased to announce version 6.4.1 of eXist-db. This is a small patch rele
 
 eXist-db 6.4.1 is backwards binary compatible with all previous 6.x.x releases. This should make upgrading simple with no changes required to XQuery or XSLT application code. For those users migrating from 4.x.x or 5.x.x versions to 6.x.x a full backup and restore of the database will be required and possibly some small changes to XQuery and XSLT application code. Please review previous releases' notes for detailed information.
 
-</div>
-
-</div>

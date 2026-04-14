@@ -9,8 +9,6 @@ original-id: "XQueryMap"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/XQueryMap"
 ---
 
-<div class="section">
-
 # Introduction
 
 The "standard" way of passing a complex data structure in XQuery is to create an XML fragment and later query it using XPath. This approach works well most of the time, but sometimes you just can't use it:
@@ -22,8 +20,6 @@ The "standard" way of passing a complex data structure in XQuery is to create an
 Maps provide a solution to the problems above. Michael Kay has posted a well thought out [proposal](http://dev.saxonica.com/blog/mike/2012/01/#000188) for maps, which I decided to implement a few weeks ago.
 
 Let's have a quick look at the map datatype as proposed by Michael and implemented in the current trunk of eXist-db. Note that this is not part of the XQuery 3.0 specification - though it is considered for later inclusion - and may be subject to change.
-
-<div class="section">
 
 # Creating a Map
 
@@ -69,8 +65,6 @@ let $map :=
 As you can see, the only way to create a map from a sequence programmatically is to merge single-item maps into the new map. The map implementation in eXist-db makes sure this is not too expensive (by using a lightweight wrapper for single key/value pairs).
 
 In this example, the collation string `"?strength=primary"` causes keys to be compared in a case-insensitive way.
-
-<div class="section">
 
 # Look Up
 
@@ -123,8 +117,6 @@ return
     <day n="{$daysOfWeek($day)}" atWork="{map:contains($workDays, $day)}">{$day}</day>
 ```
 
-<div class="section">
-
 # Maps are Immutable
 
 To remove a key/value pair, call
@@ -147,8 +139,6 @@ return (
 
 Internally, eXist-db uses an efficient implementation of persistent immutable maps and hash tables taken from [clojure](http://clojure.org/) , another lisp-like, functional language for the Java VM.
 
-<div class="section">
-
 # Use Cases
 
 So far I found maps to be useful in a number of scenarios:
@@ -156,8 +146,6 @@ So far I found maps to be useful in a number of scenarios:
 1.  in my HTML templating framework for passing around application data between templates. In this case the sequences stored in the map can potentially be very large, e.g. if they include the result of queries into the database. Wrapping the data into an in-memory fragment would thus be a bad idea.
 2.  to pass optional configuration parameters into a library module.
 3.  to introduce additional levels of abstraction when working with heterogeneous data sets.
-
-<div class="section">
 
 ## Function Items as Values
 
@@ -212,22 +200,7 @@ declare function local:wrap($root as element()) as map(xs:string, function(*))? 
 
 This approach has its limitations. There's no guarantee that the maps returned by local:wrap do indeed have a "title" function. XQuery is not - and was not designed to be - an object-oriented language. However, I can see that the technique could improve reusability of code libraries.
 
-</div>
-
-</div>
-
-<div class="section">
-
 # Availability
 
 Maps as a data type are currently available in eXist-db trunk and will likely go into the final 2.0 release (only minor additions to the query engine were required). If you would like to test them right now, feel free to [check out](http://exist-db.org/exist/building.xml#svn) trunk.
 
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>

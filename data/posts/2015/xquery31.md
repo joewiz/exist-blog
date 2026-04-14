@@ -10,19 +10,14 @@ original-id: "XQuery31"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/XQuery31"
 ---
 
-<div class="row">
-    <div class="col-md-6">
-        The current development version of eXistdb includes full support for the array data type and related features from the [XQuery 3.1 Candidate Recommendation](http://www.w3.org/TR/xquery-31/#id-arrays). In combination with maps, arrays allow for a more "natural" representation of JSON in XQuery. Processing JSON or interfacing with external services returning JSON has become a lot more straightforward.
-        
-        But even if you are only mildly interested in JSON, arrays are a welcome addition to the XQuery language, mainly because unlike sequences, arrays can be nested. I guess most XQuery programmers have encountered a situation in which it would have been nice to return a sequence of sequences from a function. And sometimes you may want to indicate that particular items in a result sequence are empty. With arrays you can do all that. Arrays may contain other arrays or maps, sequences or even the empty sequence as members.
-    </div>
-    <div class="col-md-6">
-        <figure>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/XqehyfyjYWA" frameborder="0" allowfullscreen></iframe>
-        <figcaption>Recorded presentation of this article during the eXistdb user pre-conference in Prague</figcaption>
-        </figure>
-    </div>
-</div>
+The current development version of eXistdb includes full support for the array data type and related features from the [XQuery 3.1 Candidate Recommendation](http://www.w3.org/TR/xquery-31/#id-arrays). In combination with maps, arrays allow for a more "natural" representation of JSON in XQuery. Processing JSON or interfacing with external services returning JSON has become a lot more straightforward.
+
+But even if you are only mildly interested in JSON, arrays are a welcome addition to the XQuery language, mainly because unlike sequences, arrays can be nested. I guess most XQuery programmers have encountered a situation in which it would have been nice to return a sequence of sequences from a function. And sometimes you may want to indicate that particular items in a result sequence are empty. With arrays you can do all that. Arrays may contain other arrays or maps, sequences or even the empty sequence as members.
+
+<figure>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/XqehyfyjYWA" frameborder="0" allowfullscreen></iframe>
+<figcaption>Recorded presentation of this article during the eXistdb user pre-conference in Prague</figcaption>
+</figure>
 
 # Array Constructors
 

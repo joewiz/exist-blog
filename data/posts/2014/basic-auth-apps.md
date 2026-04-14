@@ -10,12 +10,8 @@ original-id: "BasicAuthApps"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/BasicAuthApps"
 ---
 
-<row>
+Another great video tutorial by Loren Cahlander to help you set up basic authentication in your eXistdb app.
 
-<div class="col-md-6">
-<p>Another great video tutorial by Loren Cahlander to help you set up basic authentication in your eXistdb app.</p>
-<p>You can also check out his <a href="https://github.com/lcahlander/mysec">source code</a> for the app on github.</p></div>
+You can also check out his [source code](https://github.com/lcahlander/mysec) for the app on github.
 
-<div class="col-md-6">
 <iframe width="560" height="315" src="//www.youtube.com/embed/OlfOCb2-o-Y" frameborder="0" allowfullscreen></iframe>
-</div>

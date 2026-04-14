@@ -13,29 +13,6 @@ Features include: fast syntax highlighting, ability to edit huge XQuery files, c
 
 This is the first part of my screencast. The second part will cover the application development cycle, including code generation (scaffolding), deployment and synchronization.
 
-<div style="margin: 15px auto; text-align: center;">
-
-<div class="iframe">
-
-<div id="player">
-
-</div>
-
-<div class="player-unavailable">
-
-# An error occurred.
-
-<div class="submessage">
-
-Unable to execute JavaScript.
-
-</div>
-
-</div>
-
-</div>
-
-</div>
 
 eXide is now available in SVN trunk ([]()). After updating, just open `http://localhost:8080/exist/eXide/` in your browser. The application uses some HTML5 features (local storage, CSS3) and has been tested with recent versions of Firefox (3.5/4.0), Chromium and Safari. Internet Explorer won't work (I'm sure it can be fixed but I did not want to go through it yet).
 

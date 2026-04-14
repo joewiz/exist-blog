@@ -31,17 +31,12 @@ TEI Publisher builds upon an efficient implementation of the [TEI Processing Mod
 TEI Publisher **empowers the editors**, offering **rapid publishing across media** while assuring full control over editorial decisions. 
 For developers, TEI Publisher heavily reduces the amount of custom code required by typical digital edition. Transformations can be customized just by tweaking a single processing specification expressed in TEI ODD and changes are consistently carried through into all output formats. Highly formulaic and easily readable TEI ODD processing models **save thousands of lines** of handwritten transformations. Typically less than a few hundred lines of ODD instructions are sufficient to cover the needs even for projects of broad scope and volume, sustaining substantial everyday traffic. This means roughly **ten-fold decrease in code size alone**, not mentioning **drastic improvements in maintenance**.
 
-<div class="row">
-<div class="col-md-6">
 <figure>
-    <img src="sebastian.jpg"/>
+    <img src="sebastian.jpg" alt="Sebastian Rahtz sketching Wolfgang Meier's proposal for Processing Model extension"/>
     <figcaption>Sebastian Rahtz sketching Wolfgang Meier's proposal for Processing Model extension</figcaption>
 </figure>
-</div>
-<div class="col-md-6">
+
 TEI Publisher is a result of serendipitous chain of events started with the TEI Processing Model developed by **TEI Simple** project. TEI Simple, funded by a generous grant from the Andrew W. Mellon Foundation, with substantial contributions from the Northwestern University, University of Nebraska-Lincoln, the University of Oxford, and the TEI Consortium was the work of the late Sebastian Rahtz and Martin Mueller with substantial contributions from James Cummings, Brian Pytlik Zillig, and Magdalena Turska. The integration of the Processing Model into the TEI infrastructure has been possible due to the efforts of the TEI Council with notable input of Lou Burnard. Implementation of the TEI Processing Model in XQuery has been the work of Wolfgang Meier and so was later the development of the TEI Publisher (initially under the name of _TEI Processing Model Toolbox_), made possible by strong support from eXist Solutions.
-</div>
-</div>
 
 Having its roots in the TEI community, TEI Publisher is obviously well-suited to publishing TEI documents, but by no means are its applications limited to documents encoded in TEI (or TEI Simple) schema. Thanks to the universality of the Processing Model, the TEI Publisher can be made to work with any XML vocabulary as long as default processing models are defined for it. Moreover the processing model library can be used independently of the TEI Publisher app.
 
