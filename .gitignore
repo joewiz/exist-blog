@@ -2,3 +2,4 @@ node_modules/
 .build/
 dist/
 .existdb.json
+*.DS_Store
