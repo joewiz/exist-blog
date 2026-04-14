@@ -17,10 +17,10 @@ The next major release of eXist-db brings significant improvements across the bo
 eXist-db 7.0 ships with support for key XQuery 4.0 features, including the arrow operator and new built-in functions:
 
 ```xquery
-(1, 2, 3) -> fn:sum()
-```
+xquery version "4.0";
 
-[Try it](/exist/apps/sandbox/?query=(1,2,3)->fn:sum())
+(1, 2, 3) -> fn:sum(.)
+```
 
 ## Performance Improvements
 

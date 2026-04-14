@@ -12,6 +12,7 @@ module namespace blog="http://exist-db.org/apps/blog";
 import module namespace config="http://exist-db.org/apps/blog/config" at "config.xqm";
 
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
+declare namespace md="http://exist-db.org/xquery/markdown";
 
 (:~
  : Parse YAML front matter from a Markdown string.
@@ -91,13 +92,15 @@ declare function blog:get-post($rel-path as xs:string) as map(*)? {
             let $source := util:binary-to-string(util:binary-doc($full-path))
             let $meta := blog:parse-front-matter($source)
             let $slug := replace(replace($rel-path, "\.md$", ""), "/", "/")
+            let $rendered := blog:render-markdown($meta?body)
             return
                 map:merge((
                     $meta,
                     map {
                         "path": $rel-path,
                         "slug": $slug,
-                        "html": blog:render-markdown($meta?body)
+                        "html": $rendered?html,
+                        "has-cells": $rendered?has-cells
                     }
                 ))
         else
@@ -221,10 +224,74 @@ declare variable $blog:MD_NS := "http://exist-db.org/xquery/markdown";
 declare variable $blog:MD_CLASS := "java:org.exist.xquery.modules.markdown.MarkdownModule";
 
 (:~
- : Render Markdown to HTML.
- : Uses exist-markdown-3.0.0 if available, otherwise falls back to basic rendering.
+ : Parse Pandoc-style fenced code options from a language string.
+ : E.g. "xquery {method=json indent=yes}" → map { "method": "json", "indent": "yes" }
  :)
-declare function blog:render-markdown($markdown as xs:string) as node()* {
+declare %private function blog:parse-cell-options($language as xs:string) as map(*) {
+    let $attr-match := analyze-string($language, "\{([^}]*)\}")
+    return
+        if ($attr-match//fn:group[@nr="1"]) then
+            let $attr-str := string($attr-match//fn:group[@nr="1"])
+            let $pairs := analyze-string($attr-str, '(\S+?)=("[^"]*"|''[^'']*''|\S+)')
+            return map:merge(
+                for $match in $pairs//fn:match
+                let $key := string($match/fn:group[@nr="1"])
+                let $val := string($match/fn:group[@nr="2"])
+                let $val := replace($val, '^["'']|["'']$', '')
+                return map:entry($key, $val)
+            )
+        else
+            map {}
+};
+
+(:~
+ : Render an XQuery fenced code block as an interactive blog cell.
+ :)
+declare %private function blog:render-cell(
+    $query as xs:string,
+    $options as map(*)
+) as element() {
+    let $method := ($options?method, "adaptive")[1]
+    return
+    <div class="blog-cell"
+            data-method="{$method}"
+            data-indent="{($options?indent, '')[1]}">
+        <div class="blog-cell-header">
+            <span class="blog-cell-label">XQuery</span>
+            {
+                if (map:size($options) > 0) then
+                    <span class="blog-cell-options">{
+                        string-join(
+                            for $key in map:keys($options)
+                            return $key || "=" || $options($key),
+                            " "
+                        )
+                    }</span>
+                else ()
+            }
+        </div>
+        <div class="blog-cell-editor">
+            <jinn-codemirror mode="xquery" code="{$query}"></jinn-codemirror>
+        </div>
+        <div class="blog-cell-actions">
+            <button class="blog-cell-run">Run &#x25b6;</button>
+            <button class="blog-cell-reset" style="display:none">Reset &#x21ba;</button>
+            <select class="blog-cell-method">
+                <option value="adaptive">{if ($method eq "adaptive") then attribute selected {"selected"} else ()}Adaptive</option>
+                <option value="xml">{if ($method eq "xml") then attribute selected {"selected"} else ()}XML</option>
+                <option value="json">{if ($method eq "json") then attribute selected {"selected"} else ()}JSON</option>
+                <option value="text">{if ($method eq "text") then attribute selected {"selected"} else ()}Text</option>
+            </select>
+        </div>
+        <div class="blog-cell-result" style="display:none"></div>
+    </div>
+};
+
+(:~
+ : Render Markdown to HTML, converting xquery fenced code blocks to interactive cells.
+ : Returns a map with "html" (node()*) and "has-cells" (xs:boolean).
+ :)
+declare function blog:render-markdown($markdown as xs:string) as map(*) {
     let $parse-fn := blog:md-function("parse", 1)
     let $html-fn := blog:md-function("to-html", 1)
     (: Normalize line endings :)
@@ -235,16 +302,26 @@ declare function blog:render-markdown($markdown as xs:string) as node()* {
     let $normalized := replace($normalized, "<(?:/)?(?:div|section|article|body|aside|nav|footer|header)(?:\s[^>]*)?>[\s]*", "")
     return
         if (exists($parse-fn) and exists($html-fn)) then
-            (: Run through exist-markdown (handles Markdown + inline HTML) :)
-            let $rendered := $html-fn($parse-fn($normalized))
-            (: exist-markdown entity-escapes HTML block tags — unescape them :)
-            let $html-str := serialize($rendered)
-            let $unescaped := blog:unescape-html-tags($html-str)
-            return
-                try { parse-xml-fragment($unescaped) }
-                catch * { $rendered }
+            let $doc := $parse-fn($normalized)
+            let $xquery-blocks := $doc//md:fenced-code[starts-with(@language, "xquery")]
+            let $has-cells := exists($xquery-blocks)
+            let $html :=
+                for $node in $doc/md:document/*
+                return
+                    if ($node/self::md:fenced-code[starts-with(@language, "xquery")]) then
+                        let $options := blog:parse-cell-options(string($node/@language))
+                        return blog:render-cell(string($node), $options)
+                    else
+                        (: Run through exist-markdown and unescape entity-escaped HTML tags :)
+                        let $partial := $html-fn($node)
+                        let $str := blog:unescape-html-tags(serialize($partial))
+                        return try { parse-xml-fragment($str) } catch * { $partial }
+            return map { "html": $html, "has-cells": $has-cells }
         else
-            <div class="markdown-raw"><pre>{ $markdown }</pre></div>
+            map {
+                "html": <div class="markdown-raw"><pre>{ $markdown }</pre></div>,
+                "has-cells": false()
+            }
 };
 
 (:~
@@ -287,6 +364,14 @@ declare function blog:md-to-html($parsed as node()) as node()* {
             $fn($parsed)
         else
             error(xs:QName("blog:NO_MARKDOWN"), "exist-markdown module not available")
+};
+
+(:~
+ : Render Markdown to HTML nodes only (no cell detection).
+ : Convenience wrapper returning just the html nodes for non-post contexts.
+ :)
+declare function blog:render-markdown-html($markdown as xs:string) as node()* {
+    blog:render-markdown($markdown)?html
 };
 
 (:~

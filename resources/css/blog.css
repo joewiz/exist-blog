@@ -429,3 +429,174 @@
     background: #d32f2f;
     color: #fff;
 }
+
+/* XQuery blog cell — mirrors notebook playground.css visual language */
+
+/*
+ * Re-declare notebook CSS tokens so blog-cell styling is consistent with
+ * the notebook without requiring playground.css to be loaded.
+ */
+.blog-cell,
+.blog-cell * {
+    --pg-font-mono: "JetBrains Mono", "Fira Code", "Source Code Pro", monospace;
+    --pg-border: #e0e0e0;
+    --pg-surface: #ffffff;
+    --pg-text-muted: #666;
+    --pg-accent: #2563eb;
+    --pg-accent-hover: #1d4ed8;
+    --pg-success: #16a34a;
+    --pg-error: #dc2626;
+    --pg-error-bg: #fef2f2;
+    --pg-cell-bg: #f8f9fa;
+    --pg-result-bg: #f0f4f8;
+    --pg-radius: 6px;
+    --pg-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.blog-cell {
+    margin: 1.5rem 0;
+    border: 1px solid var(--pg-border);
+    border-radius: var(--pg-radius);
+    background: var(--pg-surface);
+    box-shadow: var(--pg-shadow);
+    overflow: hidden;
+    font-size: 0.9rem;
+}
+
+.blog-cell-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.4rem 0.75rem;
+    background: var(--pg-cell-bg);
+    border-bottom: 1px solid var(--pg-border);
+    font-size: 0.8rem;
+}
+
+.blog-cell-label {
+    font-family: var(--pg-font-mono);
+    font-weight: 600;
+    color: var(--pg-accent);
+}
+
+.blog-cell-options {
+    font-family: var(--pg-font-mono);
+    font-size: 0.75rem;
+    color: var(--pg-text-muted);
+    padding: 0.1rem 0.4rem;
+    background: var(--pg-border);
+    border-radius: 3px;
+}
+
+.blog-cell-editor {
+    background: var(--pg-surface);
+}
+
+.blog-cell-editor jinn-codemirror {
+    display: block;
+    min-height: 3em;
+    font-size: 0.85rem;
+}
+
+.blog-cell-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    background: var(--pg-cell-bg);
+    border-top: 1px solid var(--pg-border);
+}
+
+.blog-cell-run,
+.blog-cell-reset {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    border: 1px solid var(--pg-border);
+    border-radius: var(--pg-radius);
+    background: var(--pg-surface);
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.blog-cell-run {
+    background: var(--pg-accent);
+    border-color: var(--pg-accent);
+    color: #fff;
+    font-weight: 600;
+}
+
+.blog-cell-run:hover:not(:disabled) {
+    background: var(--pg-accent-hover);
+    border-color: var(--pg-accent-hover);
+}
+
+.blog-cell-run:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.blog-cell-reset:hover {
+    border-color: var(--pg-accent);
+    color: var(--pg-accent);
+}
+
+.blog-cell-method {
+    margin-left: auto;
+    padding: 0.2rem 0.4rem;
+    border: 1px solid var(--pg-border);
+    border-radius: var(--pg-radius);
+    font-size: 0.8rem;
+    color: var(--pg-text-muted);
+    background: var(--pg-surface);
+}
+
+.blog-cell-result {
+    min-height: 0;
+}
+
+.blog-cell-result-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    background: var(--pg-result-bg);
+    font-family: var(--pg-font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--pg-success);
+    border-top: 1px solid var(--pg-border);
+}
+
+.blog-cell-result-meta {
+    font-weight: 400;
+    color: var(--pg-text-muted);
+    font-size: 0.75rem;
+}
+
+.blog-cell-output {
+    display: block;
+    margin: 0;
+    padding: 0.75rem;
+    font-family: var(--pg-font-mono);
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: var(--pg-result-bg);
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.blog-cell-error {
+    padding: 0.75rem;
+    background: var(--pg-error-bg);
+    color: var(--pg-error);
+    font-family: var(--pg-font-mono);
+    font-size: 0.85rem;
+    border-top: 2px solid var(--pg-error);
+    white-space: pre-wrap;
+}
+
+.blog-cell-output-cm {
+    display: block;
+    background: var(--pg-result-bg);
+}

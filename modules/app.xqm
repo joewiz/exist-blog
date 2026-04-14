@@ -169,6 +169,10 @@ function app:post-detail($node as node(), $model as map(*)) {
  :)
 declare function app:post-content($node as node(), $model as map(*)) {
     let $post := $model?post
+    let $_ :=
+        if ($post?has-cells) then
+            request:set-attribute("blog:has-cells", true())
+        else ()
     return
         if (empty($post)) then
             <div class="error">
@@ -199,7 +203,7 @@ declare function app:post-content($node as node(), $model as map(*)) {
                     if (exists($post?html)) then
                         $post?html
                     else if (exists($post?body)) then
-                        blog:render-markdown($post?body)
+                        blog:render-markdown($post?body)?html
                     else
                         <p>No content available.</p>
                 }</div>

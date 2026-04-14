@@ -74,9 +74,11 @@ declare function local:resolver($path as xs:string) as map(*)? {
 declare function local:build-context() as map(*) {
     let $contextPath := request:get-context-path() || "/apps/blog"
     let $pageTitle := request:get-attribute("page-title")
+    let $has-cells := (request:get-attribute("blog:has-cells"), false())[1]
     return map {
         "context-path": $contextPath,
         "styles": array { "resources/css/exist-site.css", "resources/css/blog.css" },
+        "has-cells": $has-cells,
         "site": map {
             "name": "eXist-db",
             "logo": "resources/images/exist-logo.svg"

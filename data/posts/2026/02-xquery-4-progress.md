@@ -28,7 +28,7 @@ Work on XQuery 4.0 support in eXist-db has been progressing steadily. Here's a s
 
 ## Try It
 
-You can test the implemented features in the [Sandbox](/exist/apps/sandbox/):
+You can test the implemented features in the [Notebook](/exist/apps/notebook/):
 
 ```xquery
 let $data := map {
