@@ -35,7 +35,14 @@ async function runQuery(query, method, indent) {
         body: JSON.stringify({ query })
     });
 
-    if (!execResp.ok) throw new Error(`HTTP ${execResp.status}`);
+    if (!execResp.ok) {
+        let msg = `HTTP ${execResp.status}`;
+        try {
+            const err = await execResp.json();
+            if (err.description) msg = err.description;
+        } catch (_) {}
+        return { error: msg };
+    }
     const exec = await execResp.json();
 
     // Error during compile/eval (no cursor)

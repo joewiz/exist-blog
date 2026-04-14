@@ -35,59 +35,49 @@ return $greet("eXist-db community")
 
 ## XQuery 4.0 in eXist-db 7.0
 
-eXist-db 7.0 (currently in development as the `next-v2` branch) adds support for a wide range of [XQuery 4.0](https://www.w3.org/TR/xquery-40/) features. Here are a few you can try right now.
+Speaking of showing examples, what better way to demonstrate this than to share some new features of eXist 7! eXist-db 7.0 (currently in development as the `next-v2` branch) adds support for a wide range of [XQuery 4.0](https://qt4cg.org/specifications/xquery-40/xquery-40.html) features. Here are a few you can try right now.
 
-### The arrow operator
+### The pipeline operator
 
-The arrow operator (`->`) pipes a value into a function call, with the left-hand value inserted as the first argument. This makes it easy to chain operations without deeply nested function calls:
+The [pipeline operator](https://qt4cg.org/specifications/xquery-40/xquery-40.html#id-pipeline-operator) (`->`) passes a value into an expression, binding it as the context item (`.`). This makes it easy to chain operations without deeply nested function calls:
 
 ```xquery
 xquery version "4.0";
 
-"  Hello, World!  "
-  -> fn:normalize-space()
-  -> fn:lower-case()
-  -> fn:tokenize("\s+")
-  -> fn:string-join(", ")
+'a b c'
+  -> tokenize(.)
+  -> count(.)
+  -> concat('count=', .)
 ```
 
-### The `otherwise` operator
+### The `otherwise` clause
 
-`otherwise` returns the left operand if it is a non-empty sequence, or the right operand if it is empty — a concise alternative to `if (exists($x)) then $x else $default`:
+[`otherwise`](https://qt4cg.org/specifications/xquery-40/xquery-40.html#id-otherwise) returns the left operand if it is a non-empty sequence, or the right operand if it is empty — a concise alternative to `if (exists($x)) then $x else $default`:
 
 ```xquery
 xquery version "4.0";
 
-let $config := map { "timeout": 30 }
-let $timeout := $config?timeout otherwise 60
-let $retries := $config?retries otherwise 3
+let $doc := <item price="10.00"/>
 return
-    "timeout=" || $timeout || ", retries=" || $retries
+    $doc/@price - ($doc/@discount otherwise 0)
 ```
 
-### String templates
+### CSV parsing
 
-String templates let you embed expressions directly in strings using backtick syntax, without needing string concatenation or `fn:format-string()`:
-
-```xquery
-xquery version "4.0";
-
-let $release := map { "version": "7.0", "codename": "next-v2" }
-return
-    `eXist-db {$release?version} ({$release?codename}) — built on XQuery 4.0`
-```
-
-### `for member` over arrays
-
-XQuery 4.0 adds `for member` to iterate directly over array members, complementing the existing `for $x in array:members($arr)` pattern:
+XQuery 4.0 adds [`fn:parse-csv()`](https://qt4cg.org/specifications/xpath-functions-40/Overview.html#func-parse-csv) for parsing CSV data directly. With the `header` option, the first row becomes column names accessible via the `get` function:
 
 ```xquery
 xquery version "4.0";
 
-let $features := ["arrow operator", "otherwise", "string templates", "for member"]
-return
-    for member $f in $features
-    return "- " || $f
+let $input := string-join(
+    ("name,city", "Bob,Berlin", "Alice,Aachen"),
+    "&#xA;"
+)
+let $result := fn:parse-csv($input, { "header": true() })
+return (
+    $result?get(1, "name"),
+    $result?get(2, "city")
+)
 ```
 
 ---
