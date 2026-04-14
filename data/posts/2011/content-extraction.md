@@ -9,8 +9,6 @@ original-id: "ContentExtraction"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/ContentExtraction"
 ---
 
-<div>
-
 # Content Extraction
 
 ## Prerequisites
@@ -149,5 +147,3 @@ To install the package into your own eXist instance watch our [screencast](/blog
 - Click on the install icon
 - After installation finished, the package should show up in the "Installed" tab
 - Click the installed package. You should see a link "Local URL". Click it to get to the application
-
-</div>

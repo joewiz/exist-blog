@@ -13,8 +13,6 @@ original-image-urls:
 
 ---
 
-<div>
-
 The tool will first check the collection hierarchy, then scan through the stored node tree of every document in the db, testing node properties like the node's id, child count, attribute count and node relationships. Contrary to normal database operations, the different dbx files are checked independently. This means that even if a collection is no longer readable, the tool will still be able to scan the documents in the damaged collection (this becomes important in connection with emergency backups, see below).
 
 Checking documents is very fast, much faster than serializing or exporting the data.
@@ -67,5 +65,3 @@ I also thought about sending out an email to the admin if a consistency check fa
 If Java Management Extensions (JMX) are enabled in the Java VM that is running eXist, you can use a JMX client to see the latest consistency check reports. The screenshot shows jconsole, which is included with the Java 5 and 6 JDKs.
 
 You can also subscribe to the notifications made available by the SanityReport MBean to be informed of sanity check results. Please consult []() on how to configure JMX.
-
-</div>

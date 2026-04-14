@@ -9,8 +9,6 @@ original-id: "JSONSerializer"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/JSONSerializer"
 ---
 
-<div>
-
 The new serializer is available in both, SVN trunk and the 1.4.x branch (which is the basis for the forthcoming 1.4.1 release), though the example below will only work on trunk (due to missing jquery libraries in 1.4.1). Using the serializer is as simple as adding a serialization declaration to the top of an XQuery:
 
 ``` xquery
@@ -160,5 +158,3 @@ The complete example is contained in directory `webapp/xquery/json` within your 
 <http://localhost:8080/exist/xquery/json/>
 
 To better understand how the serialization works, I would also suggest to look at the test cases available in file `test/src/xquery/json.xml` in your eXist directory or [SVN](http://exist.svn.sourceforge.net/viewvc/exist/trunk/eXist/test/src/xquery/json.xml?revision=13759&#x26;view=markup).
-
-</div>

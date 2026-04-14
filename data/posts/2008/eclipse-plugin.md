@@ -8,10 +8,9 @@ migrated-from: AtomicWiki
 original-id: "EclipsePlugin"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/EclipsePlugin"
 original-image-urls:
-  - "https://exist-db.org/exist/apps/wiki/data/blogs/eXist/Bild%208.png"
----
+  - "https://exist-db.org/exist/apps/wiki/data/blogs/eXist/Bild 8.png"
 
-<div>
+---
 
 So far the following core functionalities are provided by the plugin:
 
@@ -27,7 +26,7 @@ So far the following core functionalities are provided by the plugin:
 
 The following picture illustrates the mentioned functionalities:
 
-![](Bild%208.png)
+![](Bild 8.png)
 
 The plugin can be installed as follows:
 
@@ -44,5 +43,3 @@ The plugin can be installed as follows:
 <!-- -->
 
 - You will be guided through the installation process.
-
-</div>

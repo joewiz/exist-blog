@@ -9,8 +9,6 @@ original-id: "NewXQuery3"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/NewXQuery3"
 ---
 
-<div>
-
 Recently a few new [XQuery 3.0](http://www.w3.org/TR/xquery-30/%20) features are added to 'trunk':
 
 - try-catch
@@ -18,5 +16,3 @@ Recently a few new [XQuery 3.0](http://www.w3.org/TR/xquery-30/%20) features are
 - group by
 
 The additions are documented [here](/HowTo/XQuery3/%20).
-
-</div>

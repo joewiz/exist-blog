@@ -12,10 +12,6 @@ original-image-urls:
 
 ---
 
-<div>
-
 <img src="group.jpg" width="460" />
 
 The [slides from the eXist users meeting](/articles/XMLPrague2010) during XML Prague are finally available. Thanks to all who helped to organize this meeting. It was a great experience and very inspiring.
-
-</div>

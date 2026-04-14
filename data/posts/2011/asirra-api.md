@@ -9,8 +9,6 @@ original-id: "AsirraAPI"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/AsirraAPI"
 ---
 
-<div>
-
 Previously I wrote an XQuery Module for handling [reCaptcha](/blogs/eXist/.feed.entry/Captcha) Captchas, as I wanted to protect [my personal blog](http://www.adamretter.org.uk) from being spammed.
 
 Unfortunately in the long term reCaptcha did not really work out, as the Spammers were still posting to the comments section of my blog. Its a shame really as I agree with reCaptcha's efforts of digitising books.
@@ -132,5 +130,3 @@ declare function asirra:validate-ticket($asirra-ticket as xs:string) as xs:boole
                 false()
 };
 ```
-
-</div>

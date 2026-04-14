@@ -9,8 +9,6 @@ original-id: "Captcha"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/Captcha"
 ---
 
-<div>
-
 Store each of the files below in your /db collection, make sure to replace the instances of YOUR-PRIVATE-KEY and YOUR-PUBLIC-KEY with your reCaptcha public and private keys which you can obtain from signing up at the reCaptcha website.
 
 Then simply call []() from your web-browser (assuming you are running eXist in Jetty mode).
@@ -93,5 +91,3 @@ declare function recap:validate($private-key as xs:string, $recaptcha-challenge 
                 )
 };
 ```
-
-</div>

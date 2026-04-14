@@ -39,7 +39,7 @@ def is_local_ref(src: str) -> bool:
 
 
 def extract_filename(src: str) -> str:
-    """Get just the filename from a path reference."""
+    """Get just the filename from a path reference (URL-decode to get real name)."""
     return Path(unquote(src)).name
 
 
@@ -196,22 +196,26 @@ def main():
         image_urls_for_fm = []
 
         for (src, fname) in refs:
-            # Find source image
+            # Find source image: try decoded name, then URL-encoded form in archive
             src_image = IMAGES_ARCHIVE / fname
             if not src_image.exists():
-                # Try URL-decoded name
-                decoded_fname = unquote(fname)
-                src_image_decoded = IMAGES_ARCHIVE / decoded_fname
-                if src_image_decoded.exists():
-                    fname = decoded_fname
-                    src_image = src_image_decoded
+                # Try URL-encoded form (e.g. archive has "Bild%208.png", fname is "Bild 8.png")
+                from urllib.parse import quote
+                encoded_fname = quote(fname, safe=".-_")
+                src_image_encoded = IMAGES_ARCHIVE / encoded_fname
+                if src_image_encoded.exists():
+                    src_image = src_image_encoded  # copy it with decoded (space) name
                 else:
-                    print(f"  WARNING: image not found: {fname} (referenced in {md_path.name})")
-                    continue
+                    # Image may already be in target year dir from a prior run
+                    dest_check = md_path.parent / fname
+                    if not dest_check.exists():
+                        print(f"  WARNING: image not found: {fname} (referenced in {md_path.name})")
+                        continue
+                    src_image = None  # already in place
 
-            # Copy to year directory
+            # Copy to year directory (skip if already there or no source found)
             dest_image = md_path.parent / fname
-            if not dest_image.exists():
+            if src_image is not None and not dest_image.exists():
                 shutil.copy2(src_image, dest_image)
                 print(f"  Copied {fname} → {year}/{fname}")
 

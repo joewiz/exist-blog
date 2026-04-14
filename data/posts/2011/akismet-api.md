@@ -9,8 +9,6 @@ original-id: "AkismetAPI"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/AkismetAPI"
 ---
 
-<div>
-
 So after receiving lots of comment Spam on [my personal blog](http://www.adamretter.org.uk), I switched from using [reCaptcha](/blogs/eXist/.feed.entry/Captcha) to [Asirra](/blogs/eXist/.feed.entry/XQuery%20Module%20for%20Asirra%20API), both small Modules which I implemented in XQuery.
 
 I had assumed that the Spam was the result of a Robot, that was brute force cracking the reCaptcha Captchas via image transformation and OCR. As such, I envisaged that moving from reCaptcha to Asirra would solve this issue, as Asirra is much much tougher for a Robot to solve.
@@ -243,5 +241,3 @@ declare function akismet:_params-xml-to-form-urlencoded($params as element()) as
 ```
 
 And so far so good, since switching reCaptcha for Asirra and adding TypePad AntiSpam filtering, I havent received any spam comments. But, now that I have written this...
-
-</div>

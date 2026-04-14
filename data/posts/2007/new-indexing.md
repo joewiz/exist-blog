@@ -12,8 +12,6 @@ original-image-urls:
 
 ---
 
-<div>
-
 # Modularized Index Architecture
 
 So far, all indexes in eXist were part of the database core, i.e. their creation and configuration was hardcoded, their indexing methods were directly called from the main indexer. Certainly this "design" was too limiting. Most XML projects tend to develop slightly different indexing needs and it is hard to define one type of index that fits them all.
@@ -185,5 +183,3 @@ Choose a full text index for tokenizable text where whitespace/punctuation is mo
 I don't think I need to explain much here. The full text index is fast and should be used whenever you need to query for any sequence of separate words or tokens in a longer text. It can sometimes even be faster to post-process the returned node set and filter out wrong matches than using a much slower regular expression. The available full text functions and extension operators are described in the [documentation](http://exist-db.org/xquery.html).
 
 The full text index is currently undergoing a major redesign, but this should only increase its general usability. For example, it is currently quite difficult to replace the general-purpose tokenizer. This will certainly become much easier in the future.
-
-</div>

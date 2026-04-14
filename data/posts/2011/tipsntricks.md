@@ -9,8 +9,4 @@ original-id: "Tipsntricks"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/Tipsntricks"
 ---
 
-<div>
-
 During the last year some tips and tricks have been written. Since these were not really visible on the main page, they can be found on [here](/blogs/dizzzz/%20)
-
-</div>

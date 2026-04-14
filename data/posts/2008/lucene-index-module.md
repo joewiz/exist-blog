@@ -9,8 +9,6 @@ original-id: "LuceneIndexModule"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/LuceneIndexModule"
 ---
 
-<div>
-
 ![](http://lucene.apache.org/images/lucene_green_300.gif)
 
 There have been other attempts to combine eXist with Apache Lucene in the past. One of the advantages of our new approach is a tight integration into eXist's *modularized indexing architecture*: the index behaves like a plugin which adds itself to the db's *index pipelines*. Once configured, the index will be notified of all relevant events, like adding/removing a document, removing a collection or updating single nodes. No manual reindex is required to keep the index up to date. The module also implements common interfaces which are shared with other indexes, e.g. for highlighting matches. It is thus easy to switch between the lucene index and e.g. the ngram index without rewriting too much XQuery code.
@@ -101,5 +99,3 @@ One of the strengths of Lucene is that it allows the developer to determine near
 - use different analyzers for different languages, e.g. by checking for an []() attribute
 - allow new analyzers to be constructed in the collection configuration document
 - implement the W3C's fulltext extensions for XQuery. The grammar for the extensions has already been merged into the XQuery parser as part of a Google Summer of Code project and is available in an SVN branch. It just needs to be filled with life.
-
-</div>

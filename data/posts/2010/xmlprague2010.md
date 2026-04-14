@@ -12,8 +12,6 @@ original-image-urls:
 
 ---
 
-<div>
-
 As nearly every year, parts of the eXist team are planning to attend ([XML Prague](http://www.xmlprague.cz/)). This is certainly our favorite conference and we have used the event during the past years to meet, discuss, plan and spend some time together. It's a rather small (and affordable) conference, but you'll see all the important XML geeks hanging around there ;-) XML Prague will be even earlier this year (March 13/14).
 
 ![](xmlprague-top-logo.png)
@@ -25,5 +23,3 @@ If you plan to be at XML Prague and you are interested, please send me (wolfgang
 - if and at what time we could meet at the Friday (whole day, afternoon, late afternoon)
 - what your interests are: exchange ideas with other users or get some information/training on a particular topic
 - if you would like to present something to the users group, e.g. an application which is based on eXist or a development project you are working on
-
-</div>

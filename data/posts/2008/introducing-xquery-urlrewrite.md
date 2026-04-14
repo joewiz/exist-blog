@@ -9,8 +9,6 @@ original-id: "IntroducingXQueryURLRewrite"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/IntroducingXQueryURLRewrite"
 ---
 
-<div>
-
 At the core of the new setup is a servlet filter: *XQueryURLRewrite*. I primarily created it to process URLs in AtomicWiki, but it eventually developed into kind of a simple, servlet-based model-view-controller framework.
 
 XQueryURLRewrite was mainly inspired by the Java package [UrlRewriteFilter](http://tuckey.org/urlrewrite/) and a bit by Spring MVC. The main difference is that we are not using any configuration files to configure the URL rewriting: instead, the controller is a single XQuery, which is executed once for every request. The XQuery must return an XML fragment, which tells the servlet filter how to proceed with the request. For example, all paths in AtomicWiki map to a single XQuery. The user can directly access a wiki entry through a simple URL like `/blogs/eXist/EclipsePlugin` which internally translates to
@@ -69,5 +67,3 @@ XSLTServlet receives the request attribute "xslt.input" which points to "xslt.mo
 What benefits does it have to exchange data through request attributes? Well, we save one serialization step: XQueryServlet directly passes the node tree of its output as a valid XQuery value, so XSLTServlet doesn't need to parse it again. Using request attributes is even more useful if you have two or more XQueries which need to exchange information. XQuery 1 can use the XQuery function []() to save an arbitrary XQuery sequence. XQuery 2 then calls []() to retrieve this value.
 
 A final note on performance: the controller XQuery will be called for every request, including those for images, CSS styles etc. This may generate a small overhead (though the controller query should usually be fast). You can use the `cache-control` element to specify that the request routing for the current URI should be cached. This way, the controller query is only evaluated once for the given URI.
-
-</div>

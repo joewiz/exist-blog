@@ -12,8 +12,6 @@ original-image-urls:
 
 ---
 
-<div>
-
 ![](podcast_5_3.jpg)
 
 eXist is the subject of FLOSS Weekly episode 97. Wolfgang had the pleasure to be interview by Randal Schwartz and Leo Laporte during their show last week:
@@ -25,5 +23,3 @@ You can also view a recording of the live [video](http://odtv.me/2009/11/floss-9
 The eXist interview starts at about 12m:07s into the audio podcast.
 
 NEW: A [transcript](http://wiki.twit.tv/wiki/FLOSS_Weekly_97/Transcript) of the interview is now available. It was prepared by members of the eXist user community.
-
-</div>

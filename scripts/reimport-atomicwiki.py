@@ -129,7 +129,14 @@ def html_file_to_markdown(html_path: Path) -> str:
         return result.stdout if result.returncode == 0 else raw
 
     root = tree.getroot()
-    html_body = elem_to_html(root)
+    # The root element is always a wrapper <div> — render its children directly
+    # to avoid an unnecessary <div> in the Markdown output.
+    inner_text = root.text or ""
+    inner_children = "".join(
+        elem_to_html(child) + (child.tail or "")
+        for child in root
+    )
+    html_body = inner_text + inner_children
     html_doc = f"<html><body>{html_body}</body></html>"
 
     result = subprocess.run(

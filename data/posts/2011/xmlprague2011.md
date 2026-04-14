@@ -9,8 +9,6 @@ original-id: "XMLPrague2011"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/XMLPrague2011"
 ---
 
-<div>
-
 We would like to announce a pre-conference day for the XML Prague conference, to be held on Friday 25th March 2011.
 
 The pre-conference day will cover themes linked to XML Databases and XQuery, with a relaxed and flexible un-conference like approach at times. The day will consist of not only talks by subject experts, but also presentations and discussion topics from attendees.
@@ -31,5 +29,3 @@ Please note, that the venue is NOT the Charles University. The venue details may
 There will be no charge for the day, as it is kindly sponsored by [eXist Solutions](http://www.existsolutions.com%20)
 
 (note 1) If you would like to give a presentation, demo or host a discussion either in the morning (eXist-db related), or require a period longer than 10 minutes in the afternoon 'Demos and Discussion' slot, then please let us know in advance. Likewise, if you have suggestions for talks or points of discussion, contact: info@exist-db.org.
-
-</div>

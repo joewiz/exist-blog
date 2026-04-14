@@ -9,8 +9,6 @@ original-id: "ServiceWrapperIssues"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/ServiceWrapperIssues"
 ---
 
-<div>
-
 I recently had some problems with a Windows server running eXist trunk as a service. The service restarted a few times during the day (mainly due to memory issues which have been fixed since then). However, eXist did not get online again after the first restart. What happened?
 
 The Java service wrapper has a timeout: when launching a new JVM, it will only wait for a certain time for the newly started process to respond. If it doesn't respond within that timeframe, the wrapper will assume that something went wrong and kills the process. It then starts the next attempt.
@@ -20,5 +18,3 @@ Now, during the first restart, eXist detected that it wasn't terminated cleanly.
 We have now introduced a callback mechanism which can be used by the service wrapper to communicate with eXist. eXist will periodically send a signal to the wrapper while it's starting up or shutting down. The wrapper will extend its timeouts accordingly.
 
 The required changes are available in SVN trunk and have also been ported back to the eXist-stable-1.2 branch (which is the basis of all 1.2.x releases). If you experience corruptions after a service restart, please consider an update. We are also thinking about a 1.2.6 release.
-
-</div>

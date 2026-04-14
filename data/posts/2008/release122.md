@@ -9,8 +9,6 @@ original-id: "Release122"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/Release122"
 ---
 
-<div>
-
 This version fixes a few small, but annoying issues:
 
 - the TimeoutCheck system job needed by the REST interface could not be intialized by the scheduler. This led to "SEVERE" warnings being displayed in the logs, which caused some irritations.
@@ -26,5 +24,3 @@ This version fixes a few small, but annoying issues:
 <!-- -->
 
 - the shutdown script now tried to display a dialog box to ask for the admin password. On a headless system, this would result in an exception though.
-
-</div>

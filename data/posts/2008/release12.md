@@ -9,8 +9,6 @@ original-id: "Release12"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/Release12"
 ---
 
-<div>
-
 Let me highlight some of the major changes:
 
 ## Core features
@@ -42,5 +40,3 @@ For debugging and diagnostics, eXist now provides access to various management i
 Also, there's a complete new API for those using the db in embedded mode only: the fluent API relies on Java 5 features to provide a very elegant and smooth design.
 
 Finally, since some of you might be asking for XQJ (XQuery API for Java) support in eXist: our implementation is nearly ready, but we lacked the time to test it well enough to become part of this release. We will certainly upload another minor release once the XQJ branch has been merged into trunk and is sufficiently tested.
-
-</div>

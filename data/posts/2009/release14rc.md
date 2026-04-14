@@ -9,8 +9,6 @@ original-id: "Release14rc"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/Release14rc"
 ---
 
-<div>
-
 We are happy to announce a release candidate for eXist version 1.4 is now available for [download](http://exist-db.org/download.html). The final release should follow soon after, and will supersede the current 1.2 series as the stable branch.
 
 Among many other things, the 1.4 release features:
@@ -40,5 +38,3 @@ Among many other things, the 1.4 release features:
 However, the most important change of this release is behind the scenes – eXist’s XQuery engine has been redesigned to improve the processing of queries against in-memory documents. This has been the major bottleneck of the 1.2.x series; Experience shows that many applications will benefit from the newly redesigned core. Additionally there have been many small optimizations to the query engine, thus enabling eXist to further optimise its use of indexes or avoid unnecessary steps when evaluating positional predicates.
 
 Please have a look at the [Upgrade Guide](http://exist-db.org/upgrading.html) before installing the new version. N.B. –Several important default settings have changed!
-
-</div>

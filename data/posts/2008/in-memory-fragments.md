@@ -9,8 +9,6 @@ original-id: "InMemoryFragments"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/InMemoryFragments"
 ---
 
-<div>
-
 Let me explain what I'm talking about: as you all know, XQuery has a rich set of features which allow us to construct and process new XML nodes within the query. eXist has always supported this without restrictions. However, there were performance issues. Take a simple example:
 
 ``` xquery
@@ -32,5 +30,3 @@ We always thought that fixing those issues would require a major redesign. Our f
 I finally ended up with a version that could process the complete XQuery test suite entirely on in-memory documents - achieving the same score (99.4%) as the version which runs on stored documents! Basically, the new code applies eXist's node numbering scheme to in-memory documents. The query engine can thus use the same logic on in-memory documents as it uses on persistent documents --- well, with some differences (no indexes!).
 
 This new code has been available in the eXist-memproc branch for a while and has passed all tests so far. We thus decided to move it into trunk to get more people to test it in real-world scenarios. The code will certainly be available in the next 1.3 development release. If it proves to be stable enough, we may also consider to port it back to the 1.2 stable branch. But we definitely need more testers to decide.
-
-</div>

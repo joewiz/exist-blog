@@ -9,8 +9,6 @@ original-id: "Release124"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/Release124"
 ---
 
-<div>
-
 Besides fixing critical bugs in the storage backend, the 1.2.4 release mainly improves the memory consumption of queries on large document sets. Major changes include:
 
 - *new node set implementation*, which is much more memory efficient compared to previous approaches. The old implementation consumed a lot of memory when used with larger sets of documents. Obviously this had a negative effect on overall performance.
@@ -38,5 +36,3 @@ Besides fixing critical bugs in the storage backend, the 1.2.4 release mainly im
 The release is now available for [download](http://exist-db.org/download.html).
 
 Note: all releases in the 1.2 branch are bug fix releases and can be considered stable. They only contain hand-selected changes which were ported back from the main development version.
-
-</div>

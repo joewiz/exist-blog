@@ -9,8 +9,6 @@ original-id: "Release141"
 original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/Release141"
 ---
 
-<div>
-
 Monday, 15th August 2011
 
 Dear Ladies and Gentlemen,
@@ -48,5 +46,3 @@ Thank you
 The eXist-db team
 
 *Original message appeared on the [exist-open](https://sourceforge.net/mailarchive/message.php?msg_id=27949675) mailing list.*
-
-</div>
