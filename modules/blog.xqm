@@ -50,35 +50,66 @@ declare function blog:parse-front-matter($markdown as xs:string) as map(*) {
 };
 
 (:~
+ : Extract block-sequence items for a given key from YAML lines.
+ : Collects "  - item" lines that immediately follow "key:" with no value.
+ :)
+declare function blog:yaml-block-seq($lines as xs:string*, $key as xs:string) as xs:string* {
+    let $n := count($lines)
+    let $key-pattern := "^" || $key || ":\s*$"
+    let $key-idx :=
+        (for $i in 1 to $n
+         where matches(normalize-space($lines[$i]), $key-pattern)
+         return $i)[1]
+    return
+        if (empty($key-idx)) then ()
+        else
+            let $next-key-idx :=
+                (for $j in ($key-idx + 1) to $n
+                 where matches(normalize-space($lines[$j]), "^[a-zA-Z][a-zA-Z_-]*:")
+                 return $j)[1]
+            let $end := ($next-key-idx - 1, $n)[1]
+            for $j in ($key-idx + 1) to $end
+            where matches($lines[$j], "^\s+-")
+            return replace(normalize-space($lines[$j]), '^-\s*"?(.*?)"?\s*$', '$1')
+};
+
+(:~
  : Parse simple YAML key: value lines into a map.
- : Handles: scalar values, bracket arrays [a, b, c], quoted strings.
+ : Handles: scalar values, bracket arrays [a, b, c], quoted strings,
+ : and multi-line block sequences (- item per line).
  :)
 declare function blog:parse-yaml-lines($lines as xs:string*) as map(*) {
-    map:merge(
+    let $block-tags := blog:yaml-block-seq($lines, "tags")
+    let $scalar-map := map:merge(
         for $line in $lines
         let $trimmed := normalize-space($line)
-        where contains($trimmed, ":")
+        where contains($trimmed, ":") and not(matches($trimmed, "^-"))
         let $key := normalize-space(substring-before($trimmed, ":"))
         let $raw-value := normalize-space(substring-after($trimmed, ":"))
         let $value :=
-            (: strip surrounding quotes :)
             if (matches($raw-value, '^".*"$') or matches($raw-value, "^'.*'$")) then
                 substring($raw-value, 2, string-length($raw-value) - 2)
             else
                 $raw-value
         return
             if ($key eq "tags") then
-                (: parse [tag1, tag2, tag3] array :)
-                let $inner := replace($value, "^\[|\]$", "")
-                let $tags :=
-                    for $tag in tokenize($inner, ",")
-                    return normalize-space($tag)
-                return map { "tags": array { $tags } }
+                if ($raw-value ne "") then
+                    (: inline array: tags: [a, b, c] :)
+                    let $inner := replace($value, "^\[|\]$", "")
+                    return map { "tags": array {
+                        for $tag in tokenize($inner, ",") return normalize-space($tag)
+                    } }
+                else () (: block sequence — handled below :)
             else if ($key eq "status") then
                 map { "status": ($value[. ne ""], "published")[1] }
             else
                 map { $key: $value }
     )
+    return
+        if (exists($block-tags)) then
+            map:merge(($scalar-map, map { "tags": array { $block-tags } }))
+        else
+            $scalar-map
 };
 
 (:~

@@ -83,32 +83,40 @@ else if (starts-with($exist:path, "/api/")) then
         </forward>
     </dispatch>
 
-(: --- Login --- :)
-else if ($exist:resource eq "login" and $method eq "post") then (
-    try {
-        util:declare-option("exist:serialize", "method=json"),
-        if ($user and not($user = ("guest", "nobody"))) then
-            <status xmlns:json="http://www.json.org">
-                <user>{$user}</user>
-                <dba json:literal="true">{sm:is-dba($user)}</dba>
-            </status>
-        else (
-            response:set-status-code(401),
-            <status><error>unauthorized</error></status>
-        )
-    } catch * {
-        response:set-status-code(401),
-        <status><error>{$err:description}</error></status>
-    }
-)
+(: --- Login (GET) --- :)
+else if ($exist:resource eq "login" and $method eq "get") then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/login.html"/>
+    </dispatch>
 
-(: --- Logout --- :)
+(: --- Login (POST) --- :)
+else if ($exist:resource eq "login" and $method eq "post") then
+    let $base := request:get-context-path() || "/apps/blog"
+    return
+    if ($user and not($user = ("guest", "nobody"))) then
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <redirect url="{request:get-parameter('redirect', $base || '/admin')}"/>
+        </dispatch>
+    else
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <redirect url="{$base}/login?error=1"/>
+        </dispatch>
+
+(: --- Logout: clear persistent login cookie and session --- :)
 else if ($exist:resource eq "logout") then (
+    response:set-cookie($local:login-domain, "deleted", xs:dayTimeDuration("-P1D"), false(), (),
+        request:get-context-path()),
     session:invalidate(),
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <redirect url="./"/>
+        <redirect url="{request:get-context-path()}/apps/blog/"/>
     </dispatch>
 )
+
+(: --- Admin: redirect to login if not authenticated --- :)
+else if (starts-with($exist:path, '/admin') and (empty($user) or $user = ("guest", "nobody"))) then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <redirect url="{request:get-context-path()}/apps/blog/login?redirect={encode-for-uri(request:get-uri())}"/>
+    </dispatch>
 
 (: --- Admin: post management --- :)
 else if ($exist:path eq '/admin' or $exist:path eq '/admin/') then

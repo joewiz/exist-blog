@@ -65,6 +65,7 @@ export { clean };
 function copyXarSources() {
   return src([
     "controller.xq",
+    "login.html",
     "finish.xq",
     "collection.xconf",
     "pre-install.xq",

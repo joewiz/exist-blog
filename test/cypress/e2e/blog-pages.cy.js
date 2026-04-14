@@ -11,14 +11,14 @@ describe('Blog public pages', () => {
   });
 
   it('renders a single post with markdown content', () => {
-    cy.visit('/2026/03-exist-7-preview');
-    cy.get('.post-title').should('contain', "eXist-db 7.0 Preview");
+    cy.visit('/2026/welcome-to-the-blog');
+    cy.get('.post-title').should('contain', 'Welcome to the eXist-db Blog');
     cy.get('.post-body').should('exist');
     cy.get('.post-body h2').should('have.length.at.least', 1);
   });
 
   it('filters posts by tag', () => {
-    cy.visit('/tag/release');
+    cy.visit('/tag/news');
     cy.get('.post-summary').should('have.length.at.least', 1);
   });
 

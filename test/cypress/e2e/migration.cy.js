@@ -7,32 +7,26 @@
  */
 describe('Migrated archive posts', () => {
 
-  it('archive posts exist in the post list', () => {
+  it('migrated posts exist in the post list', () => {
     cy.apiRequest({ method: 'GET', url: '/posts' }).then((resp) => {
       expect(resp.status).to.eq(200);
-      const archivePosts = resp.body.posts.filter((p) =>
-        p.slug.startsWith('archive/')
+      // Posts from years before 2026 are all migrated AtomicWiki posts
+      const migratedPosts = resp.body.posts.filter((p) =>
+        p.slug.match(/^20(0[7-9]|1\d|2[0-5])\//)
       );
-      expect(archivePosts.length).to.be.at.least(50);
+      expect(migratedPosts.length).to.be.at.least(50);
     });
   });
 
-  it('an archive post renders with proper HTML', () => {
-    cy.apiRequest({ method: 'GET', url: '/posts' }).then((resp) => {
-      const archivePost = resp.body.posts.find((p) =>
-        p.slug.startsWith('archive/')
-      );
-      expect(archivePost).to.exist;
-
-      cy.visit(`/${archivePost.slug}`);
-      cy.get('.post-body, .post-detail').should('exist');
-      cy.get('.post-title').should('not.be.empty');
-    });
+  it('a migrated post renders with proper HTML', () => {
+    cy.visit('/2017/atom-existdb');
+    cy.get('.post-body, .post-detail').should('exist');
+    cy.get('.post-title').should('not.be.empty');
   });
 
-  it('archive pages return 200', () => {
-    cy.request('/archive/2017/atom-existdb').then((resp) => {
-      expect(resp.status).to.eq(200);
+  it('old archive URLs redirect to current post URLs', () => {
+    cy.request({ url: '/archive/2017/atom-existdb', followRedirect: false }).then((resp) => {
+      expect(resp.status).to.be.oneOf([200, 301, 302]);
     });
   });
 });

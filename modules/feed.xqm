@@ -92,7 +92,7 @@ declare function feed:entry($post as map(*)) as element(atom:entry) {
                 else
                     ()
             }
-            <atom:content type="html">{ serialize(blog:render-markdown($post?body)) }</atom:content>
+            <atom:content type="html">{ serialize(blog:render-markdown-html($post?body)) }</atom:content>
         </atom:entry>
 };
 
