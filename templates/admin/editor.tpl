@@ -5,6 +5,7 @@
             <button id="btn-save-draft" class="btn">Save Draft</button>
             <button id="btn-publish" class="btn btn-primary">Publish</button>
             <a data-template="app:admin-link" data-template-href="admin" class="btn btn-secondary">Cancel</a>
+            <a data-template="app:admin-link" data-template-href="logout" class="btn btn-secondary">Log Out</a>
         </div>
     </header>
 

@@ -1,7 +1,10 @@
 <div data-template="app:if-editor">
     <header class="admin-header">
         <h1>Blog Admin</h1>
-        <a data-template="app:admin-link" data-template-href="admin/editor" class="btn btn-primary">New Post</a>
+        <div class="admin-header-actions">
+            <a data-template="app:admin-link" data-template-href="admin/editor" class="btn btn-primary">New Post</a>
+            <a data-template="app:admin-link" data-template-href="logout" class="btn btn-secondary">Log Out</a>
+        </div>
     </header>
 
     <div class="admin-post-list" id="admin-post-list">

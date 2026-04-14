@@ -310,6 +310,7 @@ declare function app:admin-toolbar($node as node(), $model as map(*)) {
             <nav class="admin-toolbar">
                 <a href="{$config:blog-base}/admin" class="btn btn-small">Admin</a>
                 <a href="{$config:blog-base}/admin/editor" class="btn btn-small btn-primary">New Post</a>
+                <a href="{$config:blog-base}/logout" class="btn btn-small btn-secondary">Log Out</a>
             </nav>
         else ()
 };
