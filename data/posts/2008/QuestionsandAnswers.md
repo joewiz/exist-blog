@@ -1,0 +1,95 @@
+---
+title: "Questions and Answers"
+date: 2008-08-21
+author: "Dannes Wessels"
+tags:
+  - "community"
+status: published
+migrated-from: AtomicWiki
+original-id: "QuestionsandAnswers"
+original-blog: "dizzzz"
+original-url: "https://exist-db.org/exist/apps/wiki/blogs/dizzzz/QuestionsandAnswers"
+---
+
+### My webstart client does not start (with log)
+
+Probably you see something like
+
+    An error occurred while launching/running the application.
+    Title: eXist XML-DB client
+    Vendor: exist-db.org
+    Category: Security Error
+    Unsigned application requesting unrestricted access to system
+    Unsigned resource: http://localhost:8080/exist/webstart/stax-api-1.0.1.jar
+
+while the exception reads like:
+
+
+    JNLPException[category: Security Error : Exception: null : LaunchDesc: 
+    <jnlp spec="1.0+" codebase="http://localhost:8080/exist/webstart/"
+          href="http://localhost:8080/exist/webstart/exist.jnlp">
+
+The solution is to re-sign the jar files:
+
+    build.sh -f build/scripts/jarsigner.xml jnlp-unsign-all jnlp-sign-all
+
+### eXist-db does not start in Apache Tomcat
+
+The war files are tested and should work. Be sure that tomcat is not setup with the "SecurityManager" enabled (we should work this out) and that (for older versions of tomcat) all relevant XML jar files (xerces, resolver, xalan) have been installed in the 'endorsed' directory.
+
+For more information check our documentation.
+
+### Explicit validation does not work in Apache Tomcat
+
+There are indeed limitations regarding the functionality of the "validation:" functions, due to restrictions of tomcat. These are very vague.
+
+### eXist-db does not work/install on RedHat, Ubuntu, Linux
+
+Probably you use the default installed java version, gnu classpath/gjc. We recommend the Sun JVM, but JVMs of other vendors should work as well
+
+Search for "gjc" in the errormessages:
+
+    java.lang.ArrayIndexOutOfBoundsException
+       at java.lang.System.arraycopy(libgcj.so.70)
+       at java.io.ObjectInputStream.read(libgcj.so.70 )
+       at java.io.InputStream.skip(libgcj.so.70)
+       at com.izforge.izpack.installer.Unpacker.run(Unpacker.java:425)
+       at java.lang.Thread.run(libgcj.so.70)
+
+or
+
+    12 Aug 2008 16:34:31,161 [P1-9] WARN  (ServletHandler.java
+    [handle]:629) - Error for /exist/logo.jpg
+    java.lang.NoClassDefFoundError: org.apache.cocoon.reading.ImageReader
+      at java.lang.Class.initializeClass(libgcj.so.81)
+      at java.lang.Class.newInstance(libgcj.so.81)
+
+or
+
+    Exception in thread "main" java.lang.InternalError: unexpected exception
+    during linking: java.lang.ClassNotFoundException: javax.swing.JFrame
+      at 0x004f8ca3: java.lang.Throwable.Throwable(java.lang.String)
+    (/usr/lib/./libgcj.so.3)
+      at 0x004ebb1e: java.lang.Error.Error(java.lang.String)
+    (/usr/lib/./libgcj.so.3)
+      at 0x004f9086:
+    java.lang.VirtualMachineError.VirtualMachineError(java.lang.String)
+    (/usr/lib/./libgcj.so.3)
+
+<span class="strong">ant</span> can help you out to determine the java version:
+
+    ant -diagnostics | grep java.vm
+
+or
+
+    build.sh diagnostics | grep java.vm
+
+results in
+
+    java.vm.version : 1.5.0_13-119
+    java.vm.vendor : Apple Inc.
+    java.vm.name : Java HotSpot(TM) Client VM
+    java.vm.specification.name : Java Virtual Machine Specification
+    java.vm.specification.vendor : Sun Microsystems Inc.
+    java.vm.specification.version : 1.0
+    java.vm.info : mixed mode

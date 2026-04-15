@@ -117,11 +117,11 @@ declare function local:render-page($content as item()*) {
                 "modules": map {
                     "http://exist-db.org/site/nav": map {
                         "prefix": "nav",
-                        "at": $config:app-root || "/modules/nav.xqm"
+                        "at": "/db/apps/exist-site-shell/modules/nav.xqm"
                     },
                     "http://exist-db.org/site/shell-config": map {
                         "prefix": "site-config",
-                        "at": $config:app-root || "/modules/site-config.xqm"
+                        "at": "/db/apps/exist-site-shell/modules/site-config.xqm"
                     }
                 }
             })

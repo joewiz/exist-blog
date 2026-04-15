@@ -146,6 +146,21 @@ else if (matches($exist:path, "^/resources/")) then
         </forward>
     </dispatch>
 
+(: --- Tag listing with pagination: /tag/{tag}/page/{n} --- :)
+else if (matches($exist:path, "^/tag/([^/]+)/page/(\d+)/?$")) then
+    let $tag  := replace($exist:path, "^/tag/([^/]+)/page/(\d+)/?$", "$1")
+    let $page := replace($exist:path, "^/tag/([^/]+)/page/(\d+)/?$", "$2")
+    return
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <forward url="{$exist:controller}/modules/view.xq">
+                <set-attribute name="template" value="templates/tag-list.tpl"/>
+                <set-attribute name="layout" value="full"/>
+                <set-attribute name="tag" value="{$tag}"/>
+                <set-attribute name="page" value="{$page}"/>
+                <set-attribute name="page-title" value="Tag: {$tag}"/>
+            </forward>
+        </dispatch>
+
 (: --- Tag listing: /tag/{tag} --- :)
 else if (matches($exist:path, "^/tag/([^/]+)/?$")) then
     let $tag := replace($exist:path, "^/tag/([^/]+)/?$", "$1")

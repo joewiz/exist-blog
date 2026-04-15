@@ -600,3 +600,31 @@
     display: block;
     background: var(--pg-result-bg);
 }
+
+/* --- Syntax highlighting (CM6/Lezer, One Dark palette) --- */
+.tok-keyword { color: #c678dd; }
+.tok-operator { color: #56b6c2; }
+.tok-number { color: #d19a66; }
+.tok-string { color: #98c379; }
+.tok-string2 { color: #98c379; }
+.tok-comment { color: #5c6370; font-style: italic; }
+.tok-variableName { color: #e06c75; }
+.tok-variableName2 { color: #e06c75; }
+.tok-definition { color: #e5c07b; }
+.tok-punctuation { color: #abb2bf; }
+.tok-typeName { color: #e5c07b; }
+.tok-namespace { color: #e5c07b; }
+.tok-name { color: #e06c75; }
+.tok-propertyName { color: #e06c75; }
+.tok-attributeName { color: #e06c75; }
+.tok-attributeValue { color: #98c379; }
+.tok-bracket { color: #abb2bf; }
+.tok-angleBracket { color: #abb2bf; }
+.tok-tagName { color: #e06c75; }
+.tok-link { color: #61afef; }
+.tok-url { color: #61afef; text-decoration: underline; }
+.tok-atom { color: #d19a66; }
+.tok-bool { color: #d19a66; }
+.tok-null { color: #d19a66; }
+.tok-processingInstruction { color: #5c6370; }
+.tok-invalid { color: #e06c75; }
