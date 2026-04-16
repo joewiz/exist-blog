@@ -3,12 +3,10 @@
  *
  * Activates inline XQuery cells in blog posts — rendered from fenced
  * ```xquery code blocks by blog:render-markdown(). Queries are editable
- * and execute against the exist-api query endpoint.
+ * and execute against the exist-api /api/eval endpoint.
  *
- * API flow (exist-api cursor pattern):
- *   POST /exist/apps/exist-api/api/query  → { cursor, items }
- *   GET  /exist/apps/exist-api/api/query/{cursor}/results?method=...
- *   DELETE /exist/apps/exist-api/api/query/{cursor}
+ * API flow (single request):
+ *   POST /exist/apps/exist-api/api/eval → serialized text (text/plain)
  */
 
 function escapeHtml(str) {
@@ -27,47 +25,24 @@ function apiBase() {
 
 async function runQuery(query, method, indent) {
     const base = apiBase();
-
-    // 1. Execute — returns cursor
-    const execResp = await fetch(base + '/api/query', {
+    const resp = await fetch(base + '/api/eval', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query })
+        credentials: 'same-origin',
+        body: JSON.stringify({
+            query,
+            method: method || 'adaptive',
+            indent: indent ? 'yes' : 'no',
+            'omit-xml-declaration': 'yes'
+        })
     });
 
-    if (!execResp.ok) {
-        let msg = `HTTP ${execResp.status}`;
-        try {
-            const err = await execResp.json();
-            if (err.description) msg = err.description;
-        } catch (_) {}
-        return { error: msg };
+    const text = await resp.text();
+
+    if (!resp.ok || text.startsWith('Error:')) {
+        return { error: text };
     }
-    const exec = await execResp.json();
-
-    // Error during compile/eval (no cursor)
-    if (exec.description) {
-        return { error: exec.description };
-    }
-
-    const { cursor, items } = exec;
-
-    try {
-        // 2. Fetch results
-        const params = new URLSearchParams({ method, count: Math.min(items, 1000) });
-        if (indent) params.set('indent', 'yes');
-
-        const resultsResp = await fetch(`${base}/api/query/${cursor}/results?${params}`);
-        if (!resultsResp.ok) throw new Error(`HTTP ${resultsResp.status}`);
-        const results = await resultsResp.json();
-
-        // results is an array of { type, value, ... }
-        const text = results.map(r => r.value ?? '').join('\n');
-        return { result: text, count: items };
-    } finally {
-        // 3. Always close the cursor
-        fetch(`${base}/api/query/${cursor}`, { method: 'DELETE' }).catch(() => {});
-    }
+    return { result: text };
 }
 
 function initCell(cell) {
@@ -100,13 +75,11 @@ function initCell(cell) {
             resultEl.appendChild(errEl);
         } else {
             const text = data.result || '';
-            const count = data.count ?? '';
             const ms = elapsed != null ? `${elapsed}ms` : '';
-            const meta = [count ? `${count} item${count !== 1 ? 's' : ''}` : '', ms].filter(Boolean).join(' in ');
 
             const header = document.createElement('div');
             header.className = 'blog-cell-result-header';
-            header.innerHTML = `Out: <span class="blog-cell-result-meta">${escapeHtml(meta)}</span>`;
+            header.innerHTML = `Out: <span class="blog-cell-result-meta">${escapeHtml(ms)}</span>`;
             resultEl.appendChild(header);
 
             const isXml = /^\s*</.test(text);
