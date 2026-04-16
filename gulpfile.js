@@ -68,6 +68,7 @@ function copyXarSources() {
     "login.html",
     "finish.xq",
     "collection.xconf",
+    "posts-index-collection.xconf",
     "pre-install.xq",
     "modules/**/*",
     "templates/**/*",

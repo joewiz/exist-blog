@@ -31,7 +31,7 @@ let $config := map {
     }
 }
 
-return
+let $_ :=
     if (util:binary-doc-available("/db/apps/jinks/modules/generator.xqm") or
         doc-available("/db/apps/jinks/modules/generator.xqm")) then
         try {
@@ -58,3 +58,26 @@ return
         }
     else
         util:log("WARN", "blog: Jinks generator not available. Install Jinks and re-deploy.")
+
+(: Build search index: create shadow XML documents for all existing posts.
+ : The trigger fires for new/updated files, but not for files already in the database,
+ : so we call it explicitly here for every .md file under data/posts/. :)
+return
+    try {
+        util:import-module(
+            xs:anyURI("http://exist-db.org/xquery/trigger"),
+            "trigger",
+            xs:anyURI($target || "/modules/trigger.xqm")
+        ),
+        util:eval(
+            'for $year in xmldb:get-child-collections($posts-root)
+             let $col := $posts-root || "/" || $year
+             for $file in xmldb:get-child-resources($col)
+             where ends-with($file, ".md")
+             return trigger:after-update-document(xs:anyURI($col || "/" || $file))',
+            false(),
+            (xs:QName("posts-root"), $target || "/data/posts")
+        )
+    } catch * {
+        util:log("WARN", "blog: search reindex failed: " || $err:description)
+    }

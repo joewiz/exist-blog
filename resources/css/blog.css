@@ -124,6 +124,76 @@
     color: #fff;
 }
 
+/* Post article layout (two-column: content + TOC sidebar) */
+.post-article-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 2rem;
+    align-items: start;
+}
+
+.post-article-main {
+    min-width: 0;
+}
+
+.post-toc-sidebar {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
+    font-size: 0.85rem;
+}
+
+.post-toc-sidebar .toc h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #999;
+    margin: 0 0 0.5rem;
+}
+
+.post-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-item {
+    line-height: 1.5;
+    margin-bottom: 0.1rem;
+}
+
+.toc-item a {
+    color: #666;
+    text-decoration: none;
+    display: block;
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    transition: color 0.15s;
+}
+
+.toc-item a:hover {
+    color: #0066cc;
+}
+
+.toc-item-h3 {
+    padding-left: 0.75rem;
+}
+
+.toc-item a.toc-active {
+    color: #0066cc;
+    font-weight: 500;
+    background: rgba(0, 102, 204, 0.06);
+}
+
+@media (max-width: 900px) {
+    .post-article-layout {
+        grid-template-columns: 1fr;
+    }
+    .post-toc-sidebar {
+        display: none;
+    }
+}
+
 /* Post detail */
 .post-detail {
     max-width: 760px;

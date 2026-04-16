@@ -30,6 +30,7 @@ declare function local:ensure-collection($path as xs:string) {
 (: Create data collections :)
 let $_ := (
     local:ensure-collection($target || "/data/posts"),
+    local:ensure-collection($target || "/data/posts-index"),
     local:ensure-collection($target || "/resources/images/posts")
 )
 
@@ -38,19 +39,29 @@ let $_ :=
     if ("blog-editor" = sm:list-groups()) then ()
     else sm:create-group("blog-editor", "Blog editors who can create and manage posts")
 
-(: Deploy index configuration for the posts collection :)
+(: Deploy collection.xconf (trigger config) for data/posts :)
 let $posts-collection := $target || "/data/posts"
 let $config-collection := "/db/system/config" || $posts-collection
 let $_ := local:ensure-collection($config-collection)
-return
-    (: $dir points to the temporary extraction directory; collection.xconf may be
-       stored as binary or XML depending on the package manager version :)
+let $_ :=
     if (doc-available($dir || "/collection.xconf")) then
         xmldb:store($config-collection, "collection.xconf", doc($dir || "/collection.xconf"))
     else if (util:binary-doc-available($dir || "/collection.xconf")) then
         xmldb:store($config-collection, "collection.xconf",
             util:binary-to-string(util:binary-doc($dir || "/collection.xconf")),
             "application/xml")
-    else
-        (: Index config will need to be deployed manually :)
-        ()
+    else ()
+
+(: Deploy posts-index-collection.xconf (Lucene index) for data/posts-index :)
+let $index-collection := $target || "/data/posts-index"
+let $index-config-collection := "/db/system/config" || $index-collection
+let $_ := local:ensure-collection($index-config-collection)
+return
+    if (doc-available($dir || "/posts-index-collection.xconf")) then
+        xmldb:store($index-config-collection, "collection.xconf",
+            doc($dir || "/posts-index-collection.xconf"))
+    else if (util:binary-doc-available($dir || "/posts-index-collection.xconf")) then
+        xmldb:store($index-config-collection, "collection.xconf",
+            util:binary-to-string(util:binary-doc($dir || "/posts-index-collection.xconf")),
+            "application/xml")
+    else ()

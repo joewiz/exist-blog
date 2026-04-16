@@ -1,0 +1,22 @@
+<collection xmlns="http://exist-db.org/collection-config/1.0">
+    <!--
+        Lucene full-text index for the blog posts-index shadow collection.
+        Each document here is an XML shadow of a Markdown post, created
+        by modules/trigger.xqm when a .md file is stored in data/posts.
+    -->
+    <index xmlns:xs="http://www.w3.org/2001/XMLSchema">
+        <lucene>
+            <analyzer class="org.apache.lucene.analysis.standard.StandardAnalyzer"/>
+            <text qname="post">
+                <!-- Facets must be inside <text> to be tracked by Lucene -->
+                <facet dimension="site-app"     expression="'blog'"/>
+                <facet dimension="site-section" expression="'posts'"/>
+                <field name="site-content"  expression="string-join((title, author, summary, body), ' ')"/>
+                <field name="site-title"    expression="title"/>
+                <field name="site-app"      expression="'blog'"/>
+                <field name="site-section"  expression="'posts'"/>
+                <field name="site-url"      expression="url"/>
+            </text>
+        </lucene>
+    </index>
+</collection>

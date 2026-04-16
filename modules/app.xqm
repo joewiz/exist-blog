@@ -13,6 +13,7 @@ module namespace app="http://exist-db.org/apps/blog/app";
 import module namespace templates="http://exist-db.org/xquery/html-templating";
 import module namespace config="http://exist-db.org/apps/blog/config" at "config.xqm";
 import module namespace blog="http://exist-db.org/apps/blog" at "blog.xqm";
+import module namespace blog-search="http://exist-db.org/apps/blog/search" at "search.xqm";
 
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
 
@@ -339,4 +340,52 @@ declare function app:admin-scripts($node as node(), $model as map(*)) {
  :)
 declare function app:editor-scripts($node as node(), $model as map(*)) {
     <script data-base="{$config:blog-base}" type="module" src="{$config:blog-base}/resources/js/editor.js"></script>
+};
+
+(:~
+ : Render the blog search page (form + results).
+ :)
+declare function app:search($node as node(), $model as map(*)) {
+    let $q      := request:get-parameter("q", "")
+    let $results := if ($q ne "") then blog-search:query($q, 20) else array {}
+    let $count  := array:size($results)
+    return
+        <div class="blog-search-page">
+            <h1>Search the Blog</h1>
+            <form class="blog-search-form" action="" method="get">
+                <div class="search-row">
+                    <input type="search" name="q" value="{$q}"
+                           placeholder="Search posts..."
+                           aria-label="Search blog posts"/>
+                    <button type="submit">Search</button>
+                </div>
+            </form>
+            {
+                if ($q ne "") then (
+                    <p class="search-summary">
+                        {$count} result{if ($count ne 1) then "s" else ""} for
+                        <strong>{$q}</strong>
+                    </p>,
+                    if ($count eq 0) then
+                        <p>No posts matched your search.</p>
+                    else
+                        <ul class="search-results">{
+                            for $r in $results?*
+                            return
+                                <li class="search-result">
+                                    <h2><a href="{$r?url}">{$r?title}</a></h2>
+                                    {
+                                        if ($r?snippet ne "") then
+                                            <p class="search-snippet">{$r?snippet}</p>
+                                        else ()
+                                    }
+                                    <p class="search-meta">
+                                        {if ($r?date ne "") then <span>{$r?date}</span> else ()}
+                                        {if ($r?author ne "") then <span>by {$r?author}</span> else ()}
+                                    </p>
+                                </li>
+                        }</ul>
+                ) else ()
+            }
+        </div>
 };

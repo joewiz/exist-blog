@@ -138,6 +138,16 @@ else if (matches($exist:path, "^/admin/editor")) then
         </forward>
     </dispatch>
 
+(: --- Search --- :)
+else if ($exist:path eq '/search' or $exist:path eq '/search/') then
+    <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+        <forward url="{$exist:controller}/modules/view.xq">
+            <set-attribute name="template" value="templates/search-results.tpl"/>
+            <set-attribute name="layout" value="full"/>
+            <set-attribute name="page-title" value="Search"/>
+        </forward>
+    </dispatch>
+
 (: --- Static resources --- :)
 else if (matches($exist:path, "^/resources/")) then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">

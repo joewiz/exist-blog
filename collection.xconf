@@ -1,31 +1,22 @@
 <collection xmlns="http://exist-db.org/collection-config/1.0">
     <!--
-        Lucene full-text index configuration for blog posts.
-        Blog posts are stored as binary Markdown files, so we index the
-        rendered output via site-shell's site-* field convention.
-
-        This configuration is deployed to the data/posts collection
-        by pre-install.xq.
+        Configuration for the data/posts collection.
+        Blog posts are binary Markdown files — Lucene full-text indexing
+        is handled via an XQuery trigger that creates XML shadow documents
+        in data/posts-index (which has its own collection.xconf).
     -->
     <index xmlns:xs="http://www.w3.org/2001/XMLSchema">
-        <lucene>
-            <analyzer class="org.apache.lucene.analysis.standard.StandardAnalyzer"/>
-            <!-- site-shell sitewide search fields -->
-            <text qname="post">
-                <field name="site-title" expression="title"/>
-                <field name="site-author" expression="author"/>
-                <field name="site-description" expression="summary"/>
-                <field name="site-body" expression="body"/>
-                <field name="site-date" expression="date"/>
-                <field name="site-tags" expression="tags"/>
-            </text>
-        </lucene>
-        <!-- Range indexes for filtering -->
+        <!-- Range indexes for date/tag/category filtering in blog queries -->
         <range>
-            <create qname="date" type="xs:date"/>
+            <create qname="date"     type="xs:date"/>
             <create qname="category" type="xs:string"/>
-            <create qname="status" type="xs:string"/>
-            <create qname="tags" type="xs:string"/>
+            <create qname="status"   type="xs:string"/>
+            <create qname="tags"     type="xs:string"/>
         </range>
     </index>
+    <triggers>
+        <trigger class="org.exist.collections.triggers.XQueryTrigger">
+            <parameter name="url" value="xmldb:exist:///db/apps/blog/modules/trigger.xqm"/>
+        </trigger>
+    </triggers>
 </collection>
