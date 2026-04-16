@@ -33,7 +33,7 @@ declare function feed:generate($tag as xs:string?, $count as xs:integer?) as ele
             $config:blog-title || " — " || $tag
         else
             $config:blog-title
-    let $blog-url := feed:absolute-url($config:blog-base || "/")
+    let $blog-url := feed:absolute-url($config:blog-base)
     let $feed-url :=
         if ($tag and $tag ne "") then
             feed:absolute-url($config:blog-base || "/tag/" || $tag || "/feed.xml")

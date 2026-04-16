@@ -22,7 +22,7 @@ declare function sitemap:generate() as element(smap:urlset) {
         <smap:urlset>
             <!-- Blog index -->
             <smap:url>
-                <smap:loc>{ $base-url || "/" }</smap:loc>
+                <smap:loc>{ $base-url }</smap:loc>
                 <smap:changefreq>daily</smap:changefreq>
                 <smap:priority>1.0</smap:priority>
             </smap:url>

@@ -48,11 +48,23 @@ let $method := lower-case(request:get-method())
 
 return
 
-(: --- Trailing-slash redirect --- :)
+(: --- Empty path: redirect to add trailing slash for root only --- :)
 if ($exist:path eq '') then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="{request:get-uri()}/"/>
     </dispatch>
+
+(: --- Redirect trailing slashes to canonical non-slash URL (except root) --- :)
+else if ($exist:path != "/" and ends-with($exist:path, "/")
+    and not(starts-with($exist:path, "/resources/"))) then
+    let $clean := replace($exist:path, "/+$", "")
+    let $qs := request:get-query-string()
+    let $target := request:get-context-path() || $exist:prefix || $exist:controller || $clean
+        || (if ($qs) then "?" || $qs else "")
+    return
+        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
+            <redirect url="{$target}"/>
+        </dispatch>
 
 (: --- Atom feed --- :)
 else if ($exist:path eq '/feed.xml') then (
@@ -108,7 +120,7 @@ else if ($exist:resource eq "logout") then (
         request:get-context-path()),
     session:invalidate(),
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <redirect url="{request:get-context-path()}/apps/blog/"/>
+        <redirect url="{request:get-context-path()}/apps/blog"/>
     </dispatch>
 )
 
@@ -119,7 +131,7 @@ else if (starts-with($exist:path, '/admin') and (empty($user) or $user = ("guest
     </dispatch>
 
 (: --- Admin: post management --- :)
-else if ($exist:path eq '/admin' or $exist:path eq '/admin/') then
+else if ($exist:path eq '/admin') then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/modules/view.xq">
             <set-attribute name="template" value="templates/admin/post-list.tpl"/>
@@ -139,7 +151,7 @@ else if (matches($exist:path, "^/admin/editor")) then
     </dispatch>
 
 (: --- Search --- :)
-else if ($exist:path eq '/search' or $exist:path eq '/search/') then
+else if ($exist:path eq '/search') then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/modules/view.xq">
             <set-attribute name="template" value="templates/search-results.tpl"/>
@@ -157,9 +169,9 @@ else if (matches($exist:path, "^/resources/")) then
     </dispatch>
 
 (: --- Tag listing with pagination: /tag/{tag}/page/{n} --- :)
-else if (matches($exist:path, "^/tag/([^/]+)/page/(\d+)/?$")) then
-    let $tag  := replace($exist:path, "^/tag/([^/]+)/page/(\d+)/?$", "$1")
-    let $page := replace($exist:path, "^/tag/([^/]+)/page/(\d+)/?$", "$2")
+else if (matches($exist:path, "^/tag/([^/]+)/page/(\d+)$")) then
+    let $tag  := replace($exist:path, "^/tag/([^/]+)/page/(\d+)$", "$1")
+    let $page := replace($exist:path, "^/tag/([^/]+)/page/(\d+)$", "$2")
     return
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$exist:controller}/modules/view.xq">
@@ -172,8 +184,8 @@ else if (matches($exist:path, "^/tag/([^/]+)/page/(\d+)/?$")) then
         </dispatch>
 
 (: --- Tag listing: /tag/{tag} --- :)
-else if (matches($exist:path, "^/tag/([^/]+)/?$")) then
-    let $tag := replace($exist:path, "^/tag/([^/]+)/?$", "$1")
+else if (matches($exist:path, "^/tag/([^/]+)$")) then
+    let $tag := replace($exist:path, "^/tag/([^/]+)$", "$1")
     return
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$exist:controller}/modules/view.xq">
@@ -185,7 +197,7 @@ else if (matches($exist:path, "^/tag/([^/]+)/?$")) then
         </dispatch>
 
 (: --- Archive: /archive --- :)
-else if ($exist:path eq '/archive' or $exist:path eq '/archive/') then
+else if ($exist:path eq '/archive') then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <forward url="{$exist:controller}/modules/view.xq">
             <set-attribute name="template" value="templates/archive.tpl"/>
@@ -195,8 +207,8 @@ else if ($exist:path eq '/archive' or $exist:path eq '/archive/') then
     </dispatch>
 
 (: --- Archive by year: /2026 --- :)
-else if (matches($exist:path, "^/(\d{4})/?$")) then
-    let $year := replace($exist:path, "^/(\d{4})/?$", "$1")
+else if (matches($exist:path, "^/(\d{4})$")) then
+    let $year := replace($exist:path, "^/(\d{4})$", "$1")
     return
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$exist:controller}/modules/view.xq">
@@ -208,9 +220,9 @@ else if (matches($exist:path, "^/(\d{4})/?$")) then
         </dispatch>
 
 (: --- Archive by year/month: /2026/03 --- :)
-else if (matches($exist:path, "^/(\d{4})/(\d{2})/?$")) then
-    let $year := replace($exist:path, "^/(\d{4})/(\d{2})/?$", "$1")
-    let $month := replace($exist:path, "^/(\d{4})/(\d{2})/?$", "$2")
+else if (matches($exist:path, "^/(\d{4})/(\d{2})$")) then
+    let $year := replace($exist:path, "^/(\d{4})/(\d{2})$", "$1")
+    let $month := replace($exist:path, "^/(\d{4})/(\d{2})$", "$2")
     return
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$exist:controller}/modules/view.xq">
@@ -249,8 +261,8 @@ else if (matches($exist:path, "^/(\d{4})/([^/]+)$")) then
         </dispatch>
 
 (: --- Paginated listing: /page/{n} --- :)
-else if (matches($exist:path, "^/page/(\d+)/?$")) then
-    let $page := replace($exist:path, "^/page/(\d+)/?$", "$1")
+else if (matches($exist:path, "^/page/(\d+)$")) then
+    let $page := replace($exist:path, "^/page/(\d+)$", "$1")
     return
         <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
             <forward url="{$exist:controller}/modules/view.xq">

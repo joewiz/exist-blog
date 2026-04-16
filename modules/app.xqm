@@ -218,7 +218,7 @@ declare function app:tag-header($node as node(), $model as map(*)) {
     let $tag := $model?tag
     return (
         <h1>Posts tagged: {$tag}</h1>,
-        <p><a href="{$config:blog-base}/">View all posts</a>
+        <p><a href="{$config:blog-base}">View all posts</a>
         | <a href="{$config:blog-base}/tag/{$tag}/feed.xml">Atom feed for this tag</a></p>
     )
 };
@@ -259,7 +259,7 @@ declare function app:archive-header($node as node(), $model as map(*)) {
             "Archive"
     return (
         <h1>{$label}</h1>,
-        <p><a href="{$config:blog-base}/">Back to blog</a></p>
+        <p><a href="{$config:blog-base}">Back to blog</a></p>
     )
 };
 
