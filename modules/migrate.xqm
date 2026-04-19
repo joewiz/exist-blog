@@ -20,7 +20,7 @@ module namespace migrate="http://exist-db.org/apps/blog/migrate";
 
 import module namespace config="http://exist-db.org/apps/blog/config" at "config.xqm";
 import module namespace blog="http://exist-db.org/apps/blog" at "blog.xqm";
-import module namespace router="http://e-editiones.org/roaster/router";
+import module namespace roaster="http://e-editiones.org/roaster" at "roaster-compat.xqm";
 
 declare namespace atom="http://www.w3.org/2005/Atom";
 declare namespace wiki="http://exist-db.org/xquery/wiki";
@@ -45,9 +45,9 @@ declare function migrate:run($request as map(*)) {
     )[1]
     return
         if (empty($user) or $user eq "guest" or not(sm:is-dba($user))) then
-            router:response(403, "application/json", map { "error": "Forbidden — DBA access required" }, ())
+            roaster:response(403, "application/json", map { "error": "Forbidden — DBA access required" }, ())
         else if (not(xmldb:collection-available($migrate:wiki-root))) then
-            router:response(404, "application/json", map { "error": "AtomicWiki data not found. Checked: " || $config:app-root || "/data/wiki-import/blogs and /db/apps/wiki/data" }, ())
+            roaster:response(404, "application/json", map { "error": "AtomicWiki data not found. Checked: " || $config:app-root || "/data/wiki-import/blogs and /db/apps/wiki/data" }, ())
         else
             let $entries := migrate:find-all-entries()
             let $results :=

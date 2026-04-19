@@ -8,7 +8,7 @@ module namespace admin="http://exist-db.org/apps/blog/admin";
 
 import module namespace config="http://exist-db.org/apps/blog/config" at "config.xqm";
 import module namespace blog="http://exist-db.org/apps/blog" at "blog.xqm";
-import module namespace router="http://e-editiones.org/roaster/router";
+import module namespace roaster="http://e-editiones.org/roaster" at "roaster-compat.xqm";
 
 declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
 
@@ -36,7 +36,7 @@ declare function admin:is-editor() as xs:boolean {
  :)
 declare function admin:list-posts($request as map(*)) {
     if (not(admin:is-editor())) then
-        router:response(403, "application/json", map { "error": "Forbidden" }, ())
+        roaster:response(403, "application/json", map { "error": "Forbidden" }, ())
     else
         let $status := ($request?parameters?status, "all")[1]
         let $posts := blog:list-posts(map { "status": $status, "start": 1, "count": 999999 })
@@ -67,7 +67,7 @@ declare function admin:list-posts($request as map(*)) {
  :)
 declare function admin:get-post($request as map(*)) {
     if (not(admin:is-editor())) then
-        router:response(403, "application/json", map { "error": "Forbidden" }, ())
+        roaster:response(403, "application/json", map { "error": "Forbidden" }, ())
     else
         let $slug := $request?parameters?slug
         let $path := $slug || ".md"
@@ -89,7 +89,7 @@ declare function admin:get-post($request as map(*)) {
                     "body": $meta?body
                 }
             else
-                router:response(404, "application/json", map { "error": "Post not found" }, ())
+                roaster:response(404, "application/json", map { "error": "Post not found" }, ())
 };
 
 (:~
@@ -102,7 +102,7 @@ declare function admin:get-post($request as map(*)) {
  :)
 declare function admin:create-post($request as map(*)) {
     if (not(admin:is-editor())) then
-        router:response(403, "application/json", map { "error": "Forbidden" }, ())
+        roaster:response(403, "application/json", map { "error": "Forbidden" }, ())
     else
         let $body := $request?body
         let $title := $body?title
@@ -141,7 +141,7 @@ declare function admin:create-post($request as map(*)) {
 
         return
             if (util:binary-doc-available($target-path)) then
-                router:response(409, "application/json", map { "error": "Post already exists at " || $year || "/" || $slug }, ())
+                roaster:response(409, "application/json", map { "error": "Post already exists at " || $year || "/" || $slug }, ())
             else
                 let $_ := (
                     if (xmldb:collection-available($collection)) then ()
@@ -165,20 +165,20 @@ declare function admin:create-post($request as map(*)) {
  :)
 declare function admin:update-post($request as map(*)) {
     if (not(admin:is-editor())) then
-        router:response(403, "application/json", map { "error": "Forbidden" }, ())
+        roaster:response(403, "application/json", map { "error": "Forbidden" }, ())
     else
         let $slug := $request?parameters?slug
         let $body := $request?body
         let $source := $body?source
         return
             if (empty($source) or $source eq "") then
-                router:response(400, "application/json", map { "error": "No source content provided" }, ())
+                roaster:response(400, "application/json", map { "error": "No source content provided" }, ())
             else
                 (: Find the file by slug — try with year prefix patterns :)
                 let $path := admin:resolve-slug($slug)
                 return
                     if (empty($path)) then
-                        router:response(404, "application/json", map { "error": "Post not found: " || $slug }, ())
+                        roaster:response(404, "application/json", map { "error": "Post not found: " || $slug }, ())
                     else
                         let $collection := replace($path, "/[^/]+$", "")
                         let $filename := replace($path, "^.*/", "")
@@ -195,13 +195,13 @@ declare function admin:update-post($request as map(*)) {
  :)
 declare function admin:delete-post($request as map(*)) {
     if (not(admin:is-editor())) then
-        router:response(403, "application/json", map { "error": "Forbidden" }, ())
+        roaster:response(403, "application/json", map { "error": "Forbidden" }, ())
     else
         let $slug := $request?parameters?slug
         let $path := admin:resolve-slug($slug)
         return
             if (empty($path)) then
-                router:response(404, "application/json", map { "error": "Post not found: " || $slug }, ())
+                roaster:response(404, "application/json", map { "error": "Post not found: " || $slug }, ())
             else
                 let $collection := replace($path, "/[^/]+$", "")
                 let $filename := replace($path, "^.*/", "")
@@ -219,7 +219,7 @@ declare function admin:delete-post($request as map(*)) {
  :)
 declare function admin:upload-image($request as map(*)) {
     if (not(admin:is-editor())) then
-        router:response(403, "application/json", map { "error": "Forbidden" }, ())
+        roaster:response(403, "application/json", map { "error": "Forbidden" }, ())
     else
         let $filename := $request?parameters?filename
         let $data := $request?body
