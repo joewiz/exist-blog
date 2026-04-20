@@ -1,0 +1,17 @@
+<collection xmlns="http://exist-db.org/collection-config/1.0">
+    <index>
+        <lucene>
+            <analyzer class="org.apache.lucene.analysis.standard.StandardAnalyzer"/>
+            <text qname="title" boost="2.0"/>
+            <text qname="body"/>
+            <text qname="post">
+                <facet dimension="site-app" expression="'blog'"/>
+                <facet dimension="site-section" expression="'posts'"/>
+                <field name="site-content" expression="string-join((title, body), ' ')"/>
+                <field name="site-title" expression="title"/>
+                <field name="site-app" expression="'blog'"/>
+                <field name="site-section" expression="'posts'"/>
+            </text>
+        </lucene>
+    </index>
+</collection>
