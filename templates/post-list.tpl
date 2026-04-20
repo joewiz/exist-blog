@@ -2,7 +2,6 @@
     <header class="blog-header">
         <h1>eXist-db Blog</h1>
         <p class="blog-tagline">News, releases, and developer stories from the eXist-db project</p>
-        <div data-template="app:admin-toolbar"></div>
     </header>
 
     <div class="blog-layout">

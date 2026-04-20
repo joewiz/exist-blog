@@ -30,6 +30,18 @@
             [% endif %]
         </ul>
     </nav>
+    [% if array:size($breadcrumb) > 0 %]
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+        [% for $crumb in $breadcrumb?* %]
+        [% if exists($crumb?url) %]
+        <a href="[[ $crumb?url ]]">[[ $crumb?title ]]</a>
+        <span class="breadcrumb-sep" aria-hidden="true">/</span>
+        [% else %]
+        <span aria-current="page">[[ $crumb?title ]]</span>
+        [% endif %]
+        [% endfor %]
+    </nav>
+    [% endif %]
     <section class="blog-content">
         [[ $blog-content ]]
     </section>

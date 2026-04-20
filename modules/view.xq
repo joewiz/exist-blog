@@ -71,6 +71,71 @@ declare function local:resolver($path as xs:string) as map(*)? {
 (:~
  : Build the rendering context matching the exist-site profile interface.
  :)
+(:~
+ : Build breadcrumb array from request attributes.
+ : Each entry: map { "title": string, "url": string? }
+ : Last entry has no URL (current page).
+ :)
+declare function local:build-breadcrumb() as array(*) {
+    let $ctx := request:get-context-path() || "/apps/blog"
+    let $activeTab := (request:get-attribute("active-tab"), "posts")[1]
+    let $postSlug := request:get-attribute("post-slug")
+    let $tag := request:get-attribute("tag")
+    let $year := request:get-attribute("year")
+    let $month := request:get-attribute("month")
+    let $pageTitle := request:get-attribute("page-title")
+    return
+        if (exists($postSlug)) then
+            (: Post detail: Blog / Posts / {title} :)
+            array {
+                map { "title": "Blog", "url": $ctx || "/" },
+                map { "title": "Posts", "url": $ctx || "/" },
+                map { "title": ($pageTitle, $postSlug)[1] }
+            }
+        else if (exists($tag)) then
+            (: Tag listing: Blog / Tags / {tag} :)
+            array {
+                map { "title": "Blog", "url": $ctx || "/" },
+                map { "title": "Tags" },
+                map { "title": replace($tag, "-", " ") }
+            }
+        else if (exists($month)) then
+            (: Archive by month: Blog / Archive / {year} / {month} :)
+            array {
+                map { "title": "Blog", "url": $ctx || "/" },
+                map { "title": "Archive", "url": $ctx || "/archive" },
+                map { "title": $year, "url": $ctx || "/" || $year },
+                map { "title": $month }
+            }
+        else if (exists($year)) then
+            (: Archive by year: Blog / Archive / {year} :)
+            array {
+                map { "title": "Blog", "url": $ctx || "/" },
+                map { "title": "Archive", "url": $ctx || "/archive" },
+                map { "title": $year }
+            }
+        else if ($activeTab = "archive") then
+            array {
+                map { "title": "Blog", "url": $ctx || "/" },
+                map { "title": "Archive" }
+            }
+        else if ($activeTab = "search") then
+            array {
+                map { "title": "Blog", "url": $ctx || "/" },
+                map { "title": "Search" }
+            }
+        else if ($activeTab = "admin") then
+            array {
+                map { "title": "Blog", "url": $ctx || "/" },
+                map { "title": "Admin" }
+            }
+        else
+            (: Blog index :)
+            array {
+                map { "title": "Blog" }
+            }
+};
+
 declare function local:build-context() as map(*) {
     let $contextPath := request:get-context-path() || "/apps/blog"
     let $pageTitle := request:get-attribute("page-title")
@@ -100,7 +165,8 @@ declare function local:build-context() as map(*) {
         },
         "page-title": if ($pageTitle) then $pageTitle || " — " || $config:blog-title else $config:blog-title,
         "tabs": $tabs,
-        "is-admin": if ($is-admin) then "true" else ""
+        "is-admin": if ($is-admin) then "true" else "",
+        "breadcrumb": local:build-breadcrumb()
     }
 };
 

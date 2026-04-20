@@ -352,13 +352,11 @@ declare function app:search($node as node(), $model as map(*)) {
     return
         <div class="blog-search-page">
             <h1>Search the Blog</h1>
-            <form class="blog-search-form" action="" method="get">
-                <div class="search-row">
-                    <input type="search" name="q" value="{$q}"
-                           placeholder="Search posts..."
-                           aria-label="Search blog posts"/>
-                    <button type="submit">Search</button>
-                </div>
+            <form class="app-search" action="" method="get">
+                <input type="search" name="q" value="{$q}"
+                       placeholder="Search posts..."
+                       aria-label="Search blog posts"/>
+                <button type="submit">Search</button>
             </form>
             {
                 if ($q ne "") then (

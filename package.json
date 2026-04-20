@@ -39,7 +39,7 @@
     "namespace": "http://exist-db.org/apps/blog",
     "website": "https://github.com/eXist-db/exist-blog",
     "status": "beta",
-    "title": "Blog",
+    "title": "eXist-db Blog",
     "license": "LGPL-2.1-or-later"
   },
   "devDependencies": {
