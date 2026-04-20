@@ -70,12 +70,12 @@
 }
 
 .post-title a {
-    color: #1a1a1a;
+    color: var(--site-nav-bg, #1a365d);
     text-decoration: none;
 }
 
 .post-title a:hover {
-    color: #0066cc;
+    color: var(--site-accent, #3498db);
     text-decoration: underline;
 }
 
