@@ -75,6 +75,13 @@ declare function local:build-context() as map(*) {
     let $contextPath := request:get-context-path() || "/apps/blog"
     let $pageTitle := request:get-attribute("page-title")
     let $has-cells := (request:get-attribute("blog:has-cells"), false())[1]
+    let $activeTab := (request:get-attribute("active-tab"), "posts")[1]
+    let $user := request:get-attribute("org.exist.login.user")
+    let $is-admin := exists($user) and sm:is-dba($user)
+    let $tabs := map:merge(
+        for $tab in ("posts", "archive", "search", "admin")
+        return map { $tab: if ($tab eq $activeTab) then "active" else "" }
+    )
     return map {
         "context-path": $contextPath,
         "styles": array { "resources/css/exist-site.css", "resources/css/blog.css" },
@@ -91,7 +98,9 @@ declare function local:build-context() as map(*) {
                 map { "abbrev": "blog", "title": "Blog" }
             }
         },
-        "page-title": if ($pageTitle) then $pageTitle || " — " || $config:blog-title else $config:blog-title
+        "page-title": if ($pageTitle) then $pageTitle || " — " || $config:blog-title else $config:blog-title,
+        "tabs": $tabs,
+        "is-admin": if ($is-admin) then "true" else ""
     }
 };
 

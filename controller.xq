@@ -95,24 +95,31 @@ else if (starts-with($exist:path, "/api/")) then
         </forward>
     </dispatch>
 
-(: --- Login (GET) --- :)
+(: --- Login (GET) — render through view pipeline with shared navbar --- :)
 else if ($exist:resource eq "login" and $method eq "get") then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{$exist:controller}/login.html"/>
+        <forward url="{$exist:controller}/modules/view.xq">
+            <set-attribute name="template" value="templates/login.tpl"/>
+            <set-attribute name="page-title" value="Login"/>
+            <set-attribute name="layout" value="full"/>
+        </forward>
     </dispatch>
 
-(: --- Login (POST) --- :)
-else if ($exist:resource eq "login" and $method eq "post") then
-    let $base := request:get-context-path() || "/apps/blog"
-    return
+(: --- Login (POST) — return JSON for fetch-based login --- :)
+else if ($exist:resource eq "login" and $method eq "post") then (
+    util:declare-option("exist:serialize", "method=json media-type=application/json"),
     if ($user and not($user = ("guest", "nobody"))) then
-        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-            <redirect url="{request:get-parameter('redirect', $base || '/admin')}"/>
-        </dispatch>
-    else
-        <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-            <redirect url="{$base}/login?error=1"/>
-        </dispatch>
+        <status xmlns:json="http://www.json.org">
+            <user>{$user}</user>
+            <isAdmin json:literal="true">{sm:is-dba($user)}</isAdmin>
+        </status>
+    else (
+        response:set-status-code(401),
+        <status>
+            <message>Login failed</message>
+        </status>
+    )
+)
 
 (: --- Logout: clear persistent login cookie and session --- :)
 else if ($exist:resource eq "logout") then (
@@ -137,6 +144,7 @@ else if ($exist:path eq '/admin') then
             <set-attribute name="template" value="templates/admin/post-list.tpl"/>
             <set-attribute name="layout" value="full"/>
             <set-attribute name="page-title" value="Admin"/>
+            <set-attribute name="active-tab" value="admin"/>
         </forward>
     </dispatch>
 
@@ -147,6 +155,7 @@ else if (matches($exist:path, "^/admin/editor")) then
             <set-attribute name="template" value="templates/admin/editor.tpl"/>
             <set-attribute name="layout" value="full"/>
             <set-attribute name="page-title" value="Editor"/>
+            <set-attribute name="active-tab" value="admin"/>
         </forward>
     </dispatch>
 
@@ -157,6 +166,7 @@ else if ($exist:path eq '/search') then
             <set-attribute name="template" value="templates/search-results.tpl"/>
             <set-attribute name="layout" value="full"/>
             <set-attribute name="page-title" value="Search"/>
+            <set-attribute name="active-tab" value="search"/>
         </forward>
     </dispatch>
 
@@ -180,6 +190,7 @@ else if (matches($exist:path, "^/tag/([^/]+)/page/(\d+)$")) then
                 <set-attribute name="tag" value="{$tag}"/>
                 <set-attribute name="page" value="{$page}"/>
                 <set-attribute name="page-title" value="Tag: {$tag}"/>
+                <set-attribute name="active-tab" value="posts"/>
             </forward>
         </dispatch>
 
@@ -193,6 +204,7 @@ else if (matches($exist:path, "^/tag/([^/]+)$")) then
                 <set-attribute name="layout" value="full"/>
                 <set-attribute name="tag" value="{$tag}"/>
                 <set-attribute name="page-title" value="Tag: {$tag}"/>
+                <set-attribute name="active-tab" value="posts"/>
             </forward>
         </dispatch>
 
@@ -203,6 +215,7 @@ else if ($exist:path eq '/archive') then
             <set-attribute name="template" value="templates/archive.tpl"/>
             <set-attribute name="layout" value="full"/>
             <set-attribute name="page-title" value="Archive"/>
+            <set-attribute name="active-tab" value="archive"/>
         </forward>
     </dispatch>
 
@@ -216,6 +229,7 @@ else if (matches($exist:path, "^/(\d{4})$")) then
                 <set-attribute name="layout" value="full"/>
                 <set-attribute name="year" value="{$year}"/>
                 <set-attribute name="page-title" value="Archive: {$year}"/>
+                <set-attribute name="active-tab" value="archive"/>
             </forward>
         </dispatch>
 
@@ -231,6 +245,7 @@ else if (matches($exist:path, "^/(\d{4})/(\d{2})$")) then
                 <set-attribute name="year" value="{$year}"/>
                 <set-attribute name="month" value="{$month}"/>
                 <set-attribute name="page-title" value="Archive: {$year}-{$month}"/>
+                <set-attribute name="active-tab" value="archive"/>
             </forward>
         </dispatch>
 
@@ -244,6 +259,7 @@ else if (matches($exist:path, "^/archive/(\d{4})/([^/]+)$")) then
                 <set-attribute name="template" value="templates/post-detail.tpl"/>
                 <set-attribute name="layout" value="full"/>
                 <set-attribute name="post-slug" value="archive/{$year}/{$slug}"/>
+                <set-attribute name="active-tab" value="posts"/>
             </forward>
         </dispatch>
 
@@ -257,6 +273,7 @@ else if (matches($exist:path, "^/(\d{4})/([^/]+)$")) then
                 <set-attribute name="template" value="templates/post-detail.tpl"/>
                 <set-attribute name="layout" value="full"/>
                 <set-attribute name="post-slug" value="{$year}/{$slug}"/>
+                <set-attribute name="active-tab" value="posts"/>
             </forward>
         </dispatch>
 
@@ -270,6 +287,7 @@ else if (matches($exist:path, "^/page/(\d+)$")) then
                 <set-attribute name="layout" value="full"/>
                 <set-attribute name="page" value="{$page}"/>
                 <set-attribute name="page-title" value="Page {$page}"/>
+                <set-attribute name="active-tab" value="posts"/>
             </forward>
         </dispatch>
 
@@ -280,6 +298,7 @@ else if ($exist:path eq '/' or $exist:path eq '') then
             <set-attribute name="template" value="templates/post-list.tpl"/>
             <set-attribute name="layout" value="full"/>
             <set-attribute name="page" value="1"/>
+            <set-attribute name="active-tab" value="posts"/>
         </forward>
     </dispatch>
 
@@ -291,6 +310,7 @@ else (
             <set-attribute name="template" value="templates/post-list.tpl"/>
             <set-attribute name="layout" value="full"/>
             <set-attribute name="page-title" value="Not Found"/>
+            <set-attribute name="active-tab" value="posts"/>
         </forward>
     </dispatch>
 )

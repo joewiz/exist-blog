@@ -19,5 +19,19 @@
 [% endtemplate %]
 
 [% template content %]
-[[ $blog-content ]]
+<div class="blog-app">
+    <nav class="app-tabs" aria-label="Blog navigation">
+        <ul>
+            <li><a href="[[ $context-path ]]/" class="[[ $tabs?posts ]]">Posts</a></li>
+            <li><a href="[[ $context-path ]]/archive" class="[[ $tabs?archive ]]">Archive</a></li>
+            <li><a href="[[ $context-path ]]/search" class="[[ $tabs?search ]]">Search</a></li>
+            [% if $is-admin %]
+            <li><a href="[[ $context-path ]]/admin" class="[[ $tabs?admin ]]">Admin</a></li>
+            [% endif %]
+        </ul>
+    </nav>
+    <section class="blog-content">
+        [[ $blog-content ]]
+    </section>
+</div>
 [% endtemplate %]

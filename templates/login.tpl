@@ -1,0 +1,51 @@
+<div class="login-page">
+    <div class="login-card">
+        <h1>Login</h1>
+        <p>Please log in to continue.</p>
+        <form id="login-form">
+            <div class="form-field">
+                <label for="user">Username</label>
+                <input type="text" id="user" name="user" required="" autocomplete="username" autofocus="autofocus"/>
+            </div>
+            <div class="form-field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" autocomplete="current-password"/>
+            </div>
+            <input type="hidden" name="duration" value="P7D"/>
+            <p id="login-error" class="login-error" hidden="">Login failed. Check your credentials.</p>
+            <button type="submit">Log in</button>
+        </form>
+    </div>
+    <script>
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var form = this;
+        var err = document.getElementById('login-error');
+        err.hidden = true;
+        fetch('login', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(new FormData(form))
+        }).then(function(resp) {
+            if (resp.ok) {
+                return resp.json().then(function(data) {
+                    if (data.isAdmin !== undefined &amp;&amp; !data.isAdmin) {
+                        err.textContent = 'This account does not have administrator privileges.';
+                        err.hidden = false;
+                    } else {
+                        var redirect = new URLSearchParams(location.search).get('redirect');
+                        window.location.href = redirect || window.location.pathname.replace(/\/login$/, '') || '/';
+                    }
+                });
+            } else {
+                err.textContent = 'Login failed. Check your credentials.';
+                err.hidden = false;
+            }
+        }).catch(function() {
+            err.textContent = 'Connection error. Please try again.';
+            err.hidden = false;
+        });
+    });
+    </script>
+</div>

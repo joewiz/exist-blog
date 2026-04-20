@@ -22,29 +22,28 @@ describe('Blog login / logout', () => {
     cy.get('input[name="duration"]').should('have.value', 'P7D');
   });
 
-  it('POST /login with valid credentials redirects to /admin', () => {
+  it('POST /login with valid credentials returns JSON with user', () => {
     cy.request({
       method: 'POST',
       url: '/login',
       form: true,
       body: { user: 'admin', password: '', duration: 'P7D' },
-      followRedirect: false,
     }).then((resp) => {
-      expect(resp.status).to.eq(302);
-      expect(resp.headers.location).to.include('/admin');
+      expect(resp.status).to.eq(200);
+      expect(resp.body).to.have.property('user', 'admin');
+      expect(resp.body).to.have.property('isAdmin');
     });
   });
 
-  it('POST /login with bad credentials redirects back to /login', () => {
+  it('POST /login with bad credentials returns 401', () => {
     cy.request({
       method: 'POST',
       url: '/login',
       form: true,
       body: { user: 'admin', password: 'wrongpassword', duration: 'P7D' },
-      followRedirect: false,
+      failOnStatusCode: false,
     }).then((resp) => {
-      expect(resp.status).to.eq(302);
-      expect(resp.headers.location).to.include('/login');
+      expect(resp.status).to.eq(401);
     });
   });
 
