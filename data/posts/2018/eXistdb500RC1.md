@@ -39,9 +39,9 @@ In eXist-db 5.0.0-RC1, all locking interactions have been redesigned and reimple
 * Reduced Transaction overhead, by reusing existing transactions.
 * Updated Saxon for XSLT to 9.8.0-12.
 * XQuery function signatures are more closely aligned to the W3C XQuery specification.
-* `util:eval-with-context` now offers a timeout argument.
+* [`util:eval-with-context`]({docs}/functions/util/eval-with-context) now offers a timeout argument.
 * Copy APIs now offer a `preserve` flag, which behaves similarly to GNU cp's `--preserve` flag.
-* Implemented simplified `xmldb:copy-resource` and `xmldb:copy-collection` functions.
+* Implemented simplified [`xmldb:copy-resource`]({docs}/functions/xmldb/copy-resource) and [`xmldb:copy-collection`]({docs}/functions/xmldb/copy-collection) functions.
 
 
 ### Security fixes

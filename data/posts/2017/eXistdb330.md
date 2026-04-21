@@ -28,9 +28,9 @@ We are happy to announce the release of eXist-db v3.3.0. This is a minor release
 ### Bug Fixes
 - Fixed the XQuery lookup operator `?` to return the correct result with regards to empty values.
 - WebDAV now uses the default configuration for serializing XML.
-- Fixed a regression in the `xmldb:restore` Ant task.
+- Fixed a regression in the [`xmldb:restore`]({docs}/functions/xmldb/restore) Ant task.
 - `xs:base64Binary` and `xs:hexBinary` previously now set the correct `srcOffset` in the underlying stream when calling `CachingFilterInputStream#skip`.
-- `fn:replace` arguments not now correctly cleared when dynamically called.
+- [`fn:replace`]({docs}/functions/fn/replace) arguments not now correctly cleared when dynamically called.
 - Fixed Lucene `inline` elements in case of not yet applied white-space.
 - Improved the AppBundler for the MacOS .app package.
   - Now requires Java 8.

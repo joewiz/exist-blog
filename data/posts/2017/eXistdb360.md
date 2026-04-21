@@ -20,7 +20,7 @@ eXist-db v3.6.0 has just been released. This is a minor release, which contains 
 ### Features
 * Switched Collation support to use [ICU4j](http://site.icu-project.org).
 * Implemented XQuery 3.1 [UCA (Unicode Collation Algorithm)](https://www.w3.org/TR/xpath-functions-31/#uca-collations).
-* Implemented `map` type parameters for XQuery F&O 3.1 `fn:serialize`.
+* Implemented `map` type parameters for XQuery F&O 3.1 [`fn:serialize`]({docs}/functions/fn/serialize).
 * Implemented `declare context item` for XQuery 3.0.
 * Implemented XQuery 3.0 Regular Expression's support for non-capturing groups.
 * Implemented a type-safe DSL for describing and testing transactional operations upon the database.
@@ -62,17 +62,17 @@ The bundled applications of the Documentation, eXide, and Monex have all been up
 * Ensured that URIs are correctly resolved in the `SourceFactory` on Windows platforms.
 * No longer use a custom temp folder, instead use Java's; fixes a bug with Jetty on Windows platforms.
 * Fixed an issue where the `EXIST_HOME` path was not constructed correctly under some circumstances on Windows platforms.
-* Fixed the return type of `fn:doc` to match the XQuery F&O specification.
+* Fixed the return type of [`fn:doc`]({docs}/functions/fn/doc) to match the XQuery F&O specification.
 * Fixed a concurrency issue in the HTTP `SessionManager`.
 * Fixed a concurrency issue in caching Query results in the REST Server.
 * Fixed a concurrency issue in caching Query results in the XML-RPC Server.
-* Fixed the function description of `util:eval-with-context`.
+* Fixed the function description of [`util:eval-with-context`]({docs}/functions/util/eval-with-context).
 * Improved error reporting when loading extension modules and EXPath packages.
-* `fn:format-number` now returns correct error code: `FODF1310`.
-* Fixed decimal formatting in `fn:format-number`.
+* [`fn:format-number`]({docs}/functions/fn/format-number) now returns correct error code: `FODF1310`.
+* Fixed decimal formatting in [`fn:format-number`]({docs}/functions/fn/format-number).
 * Fixed QName equality comparison error code, to correctly return `XPTY0004`.
-* `fn:analyze-string` now adheres to XQuery Regular Expression syntax and not the wider Java Regular Expression syntax.
-* `fn:doc-available` now only raises FODC0005 if the supplied URI is invalid.
+* [`fn:analyze-string`]({docs}/functions/fn/analyze-string) now adheres to XQuery Regular Expression syntax and not the wider Java Regular Expression syntax.
+* [`fn:doc-available`]({docs}/functions/fn/doc-available) now only raises FODC0005 if the supplied URI is invalid.
 * Fixed Font Resolution when using Apache FOP via XSL-FO extension module.
 * Fixed a `StackOverflowException` in the History Trigger.
 * Fix to ensure that only signed dependencies end-up in the WAR build.

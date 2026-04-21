@@ -83,7 +83,7 @@ eXist; the on-disk database file format has been updated, users should
 perform a full backup and restore to migrate their data.
 * eXist 3.0.RC1 and subsequent versions now require Java 8; Users must
 update to Java 8!
-* Due to the legacy Full Text Index being removed, the `text` (`http://exist-db.org/xquery/text`) XQuery module has also been removed. Users should now look toward `fn:analyze-string`.
+* Due to the legacy Full Text Index being removed, the `text` (`http://exist-db.org/xquery/text`) XQuery module has also been removed. Users should now look toward [`fn:analyze-string`]({docs}/functions/fn/analyze-string).
 * There have been some small changes to some of the internal APIs.
 e.g. XQueryService has been moved from DBBroker to BrokerPool.
 * EXPath packages that incorporate Java libraries may no longer work

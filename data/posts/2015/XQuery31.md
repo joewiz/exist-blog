@@ -123,9 +123,9 @@ The XQuery 3.1 functions spec also includes a huge library of functions to proce
 
 As all data types in XQuery, arrays are **immutable** and cannot be modified. The functions above will thus always return a new array. eXist tries to implement this in an efficient way for functions like array:tail, array:append, array:subarray, array:remove without creating redundant copies.
 
-Please note that I did not implement `array:sort` yet. It will be added later.
+Please note that I did not implement [`array:sort`]({docs}/functions/array/sort) yet. It will be added later.
 
-Many of the functions mirror other functions already available in the standard function library, but take an array instead of a sequence as input. For example, `array:fold-left` works like `fn:fold-left`.
+Many of the functions mirror other functions already available in the standard function library, but take an array instead of a sequence as input. For example, [`array:fold-left`]({docs}/functions/array/fold-left) works like [`fn:fold-left`]({docs}/functions/fn/fold-left).
 
 ```xquery
 declare function local:price($hoursPerTask as array(xs:integer), $rate as xs:double) as xs:double {
@@ -193,7 +193,7 @@ return
         ()
 ```
 
-Here we're using the httpclient module to talk to the github API, which gives us more control over the communication. But there's also a simpler approach, using the `fn:json-doc`function:
+Here we're using the httpclient module to talk to the github API, which gives us more control over the communication. But there's also a simpler approach, using the [`fn:json-doc`]({docs}/functions/fn/json-doc)function:
 
 ```xquery
 let $url := 
@@ -202,7 +202,7 @@ return
     local:log(json-doc($url))
 ```
 
-`fn:json-doc` retrieves the contents of the given URI and parses them using fn:parse-json. It works with external resources as well as binary documents stored in eXist. To access stored resources, just use a local path, e.g. `/db/test/data.json`.
+[`fn:json-doc`]({docs}/functions/fn/json-doc) retrieves the contents of the given URI and parses them using fn:parse-json. It works with external resources as well as binary documents stored in eXist. To access stored resources, just use a local path, e.g. `/db/test/data.json`.
 
 # Serialization
 
@@ -215,7 +215,7 @@ The JSON serializer is selected if you set the serialization option `method` to 
 
 This convention allows us to run all the old code unchanged without violating the 3.1 specification too much (according to the specs, a single XML element would be serialized to a JSON string).
 
-To see the serializer in action, use the `fn:serialize` function:
+To see the serializer in action, use the [`fn:serialize`]({docs}/functions/fn/serialize) function:
 
 ```xquery
 xquery version "3.1";

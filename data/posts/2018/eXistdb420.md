@@ -19,12 +19,12 @@ eXist-db v4.2.0 has just been released. This is a minor release, which contains 
 
 ### Security Fixes
 * Added avoidance for Zip Slip / Zip Exit attacks.
-    * **NOTE**: Developers should take care when writing their own `$entry-data` functions for `compression:unzip` or `compression:untar` if they are writing the file entries to persistent storage using the name of the entry from the archive; Consideration should be given to employing further exit attack protections of their own.
+    * **NOTE**: Developers should take care when writing their own `$entry-data` functions for [`compression:unzip`]({docs}/functions/compression/unzip) or [`compression:untar`]({docs}/functions/compression/untar) if they are writing the file entries to persistent storage using the name of the entry from the archive; Consideration should be given to employing further exit attack protections of their own.
 
 
 ### Features
-* XQuery `compression:unzip` and `compression:untar` functions have received some lower-arity signatures which should simplify use. Also some helper functions have been added: `compression:no-filter`, `compression:db-store-*`, and `compression:fs-store-*`.
-* The XQuery `util:eval-with-context` function now allows a timeout to be set.
+* XQuery [`compression:unzip`]({docs}/functions/compression/unzip) and [`compression:untar`]({docs}/functions/compression/untar) functions have received some lower-arity signatures which should simplify use. Also some helper functions have been added: [`compression:no-filter`]({docs}/functions/compression/no-filter), `compression:db-store-*`, and `compression:fs-store-*`.
+* The XQuery [`util:eval-with-context`]({docs}/functions/util/eval-with-context) function now allows a timeout to be set.
 * XQSuite gains the annotation `%test:assumeInternetAccess` for ensuring Internet Access is 
 * XML-RPC Server character set is now configurable, defaults to UTF-8.
 * XQueryURLRewrite challenge is now configurable, defaults to always challenging for basic authentication.
@@ -60,8 +60,8 @@ eXist-db v4.2.0 has just been released. This is a minor release, which contains 
 * One eXist-db instance can no longer accidentally delete the temporary files of another instance (which may be in use).
 * Fixed concurrent use issues with the Index Manager.
 * Index configuration changes now cause the Index Controller to be reloaded.
-* `fn:format-date` previously calculated the name of the day of the week incorrectly (off by one e.g. Monday -> Tuesday).
-* `file:mkdirs` no longer incorrectly raises an error if the directory already exists.
+* [`fn:format-date`]({docs}/functions/fn/format-date) previously calculated the name of the day of the week incorrectly (off by one e.g. Monday -> Tuesday).
+* [`file:mkdirs`]({docs}/functions/file/mkdirs) no longer incorrectly raises an error if the directory already exists.
 * Fixed a `NullPointerException` when uploading large documents via the XML-RPC and XML:DB Remote APIs.
 * Handling of Zip entry filenames are now compatible with Java 10.
 * Fixed the behaviour of the XMLUnit functions.

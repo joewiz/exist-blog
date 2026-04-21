@@ -22,7 +22,7 @@ We encourage everyone to upgrade to this latest release. It is the culmination o
 
 - Implemented the Arrow Operator (`=>`) from XQuery 3.1
 - Implemented String Constructors from XQuery 3.1
-- Implemented `fn:has-children`, `fn:innermost`, and `fn:outermost` functions from XQuery 3.1
+- Implemented [`fn:has-children`]({docs}/functions/fn/has-children), [`fn:innermost`]({docs}/functions/fn/innermost), and [`fn:outermost`]({docs}/functions/fn/outermost) functions from XQuery 3.1
 - Extended the Range Index conditions feature
 
 ### Performance Improvements
@@ -40,7 +40,7 @@ We encourage everyone to upgrade to this latest release. It is the culmination o
 ### Clean Up and Refactoring
 
 - Refactored many tests
-- Simplified the `sql:execute` function and corrected the encoding of its results
+- Simplified the [`sql:execute`]({docs}/functions/sql/execute) function and corrected the encoding of its results
 - Function definitions are no longer shared between deferred function calls
 - All FLWOR clauses except `where` clauses are now pre-evaluated
 - Added tests for range index conditions
@@ -51,7 +51,7 @@ We encourage everyone to upgrade to this latest release. It is the culmination o
 - Added integration tests to ensure EXPath Package functionality and further support the trimming of the core
 - Extended use of SystemExitCodes instead of explicit integers
 - Improved the service wrapper (yajsw) introduced in v3.0
-- Made the `ft:query-field` only depend on context sequence
+- Made the [`ft:query-field`]({docs}/functions/ft/query-field) only depend on context sequence
 - Removed support for Launch4j exe creation
 - Fixed short form of shutdown arguments 
 - Upgraded 3rd party libraries:
@@ -63,7 +63,7 @@ We encourage everyone to upgrade to this latest release. It is the culmination o
 
 - eXist-db v3.1.0 is binary-compatible with v3.0 but not with previous versions. Users upgrading from previous versions should perform a full backup and restore to migrate their data.
 - eXist-db v3.1.0 and v3.0 require Java 8.
-- Due to the legacy Full Text Index being removed, the `text` XQuery module (`http://exist-db.org/xquery/text`) has also been removed. Users should now rely on the `fn:analyze-string` function, e.g.:
+- Due to the legacy Full Text Index being removed, the `text` XQuery module (`http://exist-db.org/xquery/text`) has also been removed. Users should now rely on the [`fn:analyze-string`]({docs}/functions/fn/analyze-string) function, e.g.:
     - Instead of using `text:groups()`, use `analyze-string()//fn:group`,
     - Instead of `text:filter("apparat", "([pr])")`, use `analyze-string("apparat", "([pr])")//fn:match/string()`
 - There have been changes to some internal APIs, e.g., XQueryService has been moved from DBBroker to BrokerPool.

@@ -18,7 +18,7 @@ eXist-db v3.4.0 has just been released. This is a minor release, which introduce
 
 ### New Features
 
-* Added function `fn:sort` defined by the XQuery 3.1 function library
+* Added function [`fn:sort`]({docs}/functions/fn/sort) defined by the XQuery 3.1 function library
 
 ### Bug fixes
 
@@ -27,7 +27,7 @@ eXist-db v3.4.0 has just been released. This is a minor release, which introduce
 * Running eXist via the system tray launcher on Mac OSX resulted in random crashes of the Java VM. The Mac .dmg distribution of eXist was thus unusable
 * Small fix to `IndexListener` interface used by extension indexes: `endElement` should be called with a valid node
 * Cleaned up the Cache Module so it is thread-safe. Also added a facility for configuring permissions for cache operations
-* Fixed `file:serialize`
+* Fixed [`file:serialize`]({docs}/functions/file/serialize)
 
 ### Backwards Compatibility
 

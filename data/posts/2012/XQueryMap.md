@@ -23,7 +23,7 @@ Let's have a quick look at the map datatype as proposed by Michael and implement
 
 # Creating a Map
 
-You create a new map through either the literal syntax or the functions `map:new` and `map:entry`. Here's the literal syntax:
+You create a new map through either the literal syntax or the functions [`map:new`]({docs}/functions/map/new) and [`map:entry`]({docs}/functions/map/entry). Here's the literal syntax:
 
 ``` xquery
 let $daysOfWeek :=
@@ -40,13 +40,13 @@ let $daysOfWeek :=
 
 The keys are arbitrary atomic values while any sequence can be used as value. You are thus not limited to string keys: dates, numbers or QNames will work as well. Keys are compared for equality using the eq operator under the map's collation.
 
-`map:entry` creates a map with a single key/value pair. Use this to create map items programmatically in combination with `map:new` (see `map:new` below):
+[`map:entry`]({docs}/functions/map/entry) creates a map with a single key/value pair. Use this to create map items programmatically in combination with [`map:new`]({docs}/functions/map/new) (see [`map:new`]({docs}/functions/map/new) below):
 
 ``` xquery
 map:entry("Sunday", 1)
 ```
 
-`map:new` creates either an empty map or a new map from a sequence of maps. It accepts an optional collation string as second parameter:
+[`map:new`]({docs}/functions/map/new) creates either an empty map or a new map from a sequence of maps. It accepts an optional collation string as second parameter:
 
 ``` xquery
 let $daysOfWeek := 
@@ -68,7 +68,7 @@ In this example, the collation string `"?strength=primary"` causes keys to be co
 
 # Look Up
 
-To look up a key, use `map:get`:
+To look up a key, use [`map:get`]({docs}/functions/map/get):
 
 ``` xquery
 map:get($map, "Tuesday")
@@ -80,15 +80,15 @@ But wait, there's a real cool shortcut to do a look up: a map is also a function
 $map("Tuesday")
 ```
 
-Calling the map as a function item otherwise just behaves like `map:get`.
+Calling the map as a function item otherwise just behaves like [`map:get`]({docs}/functions/map/get).
 
-Because the empty sequence is allowed as a value, `map:get` does not tell you for sure if a key exists in a map or not. You can use `map:contains` to see if a key is present in the map:
+Because the empty sequence is allowed as a value, [`map:get`]({docs}/functions/map/get) does not tell you for sure if a key exists in a map or not. You can use [`map:contains`]({docs}/functions/map/contains) to see if a key is present in the map:
 
 ``` xquery
 map:contains($map, "Tuesday")
 ```
 
-`map:keys` retrieves all keys in the map as a sequence:
+[`map:keys`]({docs}/functions/map/keys) retrieves all keys in the map as a sequence:
 
 ``` xquery
 map:keys($map)

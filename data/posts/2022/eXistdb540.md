@@ -19,9 +19,9 @@ Version 5.4.0 includes critical fixes for defects found in version 5.3.1. It is 
 
 ## Features and Improvements
 * The macOS DMG file release is now notarized with Apple [#4169](https://github.com/eXist-db/exist/pull/4169) [#4200](https://github.com/eXist-db/exist/pull/4200)
-* Implemented eXist-db specifix seialization options for use with the XQuery function `fn:serialize`; includes: `exist:add-exist-id`, `exist:expand-xincludes`, `exist:highlight-matches`, `exist:jsonp`, `exist:json-ignore-whitespace-text-nodes`, and `exist:process-xsl-pi` [#3990](https://github.com/eXist-db/exist/pull/3990)
+* Implemented eXist-db specifix seialization options for use with the XQuery function [`fn:serialize`]({docs}/functions/fn/serialize); includes: `exist:add-exist-id`, `exist:expand-xincludes`, `exist:highlight-matches`, `exist:jsonp`, `exist:json-ignore-whitespace-text-nodes`, and `exist:process-xsl-pi` [#3990](https://github.com/eXist-db/exist/pull/3990)
 * Implemented XQuery 3.1 function `map:merge#2` for `use-first`, `use-last`, and `use-any` 
-* Added additional options to the XQuery function `file:sync`; includes: `after`, `exclude`, and `prune` [#4081](https://github.com/eXist-db/exist/pull/4081)
+* Added additional options to the XQuery function [`file:sync`]({docs}/functions/file/sync); includes: `after`, `exclude`, and `prune` [#4081](https://github.com/eXist-db/exist/pull/4081)
 * Added two additional parameter types for use when specifying a custom analyzer: `java.lang.String[]` and `char[]` [#4082](https://github.com/eXist-db/exist/pull/4082)
 * Introduced a new and simpler Store Document API [#4157](https://github.com/eXist-db/exist/pull/4157)
 * Simplified storage of predicates for XPath steps [#3975](https://github.com/eXist-db/exist/pull/3975)
@@ -53,8 +53,8 @@ Version 5.4.0 includes critical fixes for defects found in version 5.3.1. It is 
 * Fixed issues with XSuite test descriptions [#3985](https://github.com/eXist-db/exist/pull/3988)
 * Serveral fixes to Unary Lookups [#3966](https://github.com/eXist-db/exist/pull/3966)
 * Allow Empty Enclosed Expressions in XQuery [#4089](https://github.com/eXist-db/exist/pull/4089)
-* Corrected the XQuery function `util:expand` so that it correctly handles Documents and Attributes [#4172](https://github.com/eXist-db/exist/pull/4172)
-* Corrected the XQuery function `fn:generate-id` to provide unique IDs for unique Nodes [#4167](https://github.com/eXist-db/exist/pull/4167)
+* Corrected the XQuery function [`util:expand`]({docs}/functions/util/expand) so that it correctly handles Documents and Attributes [#4172](https://github.com/eXist-db/exist/pull/4172)
+* Corrected the XQuery function [`fn:generate-id`]({docs}/functions/fn/generate-id) to provide unique IDs for unique Nodes [#4167](https://github.com/eXist-db/exist/pull/4167)
 * DejaVu Fonts were updated in the Docker Image [#4028](https://github.com/eXist-db/exist/pull/4028)
 * Fixed an impossible type conversion in NativeValueIndex that generated noisy log messages [#4175](https://github.com/eXist-db/exist/pull/4175)
 

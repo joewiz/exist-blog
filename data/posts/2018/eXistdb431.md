@@ -31,13 +31,13 @@ We recommend that all users of eXist-db 4.x.x should upgrade to eXist-db 4.3.1.
 	2. Always close and dispose of any LDAP context that we create.
 	3. Fixed encoding of CN and DN names during LDAP searches.
 
-* Fixed an issue where the XQuery function `file:serialize` could use the incorrect character encoding depending on which platform eXist-db was being executed on.
+* Fixed an issue where the XQuery function [`file:serialize`]({docs}/functions/file/serialize) could use the incorrect character encoding depending on which platform eXist-db was being executed on.
 
 * Fixed a comparison problem with node equality in the DOM API exposed via. the XML:DB Local API.
 
 * Fixed a `java.nio.file.Path` issue when loading eXist-db's `conf.xml` file from inside a classpath Jar file.
 
-* Removed unnecessary error level logging of the XQuery `fn:error` function.
+* Removed unnecessary error level logging of the XQuery [`fn:error`]({docs}/functions/fn/error) function.
 
 * Fixed an issue with the error message for restoring permissions; Now the entire resource URI is shown.
 

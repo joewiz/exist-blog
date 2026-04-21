@@ -54,13 +54,13 @@ eXist-db 5.0.0-RC2 builds atop eXist-db [5.0.0-RC1](http://www.exist-db.org/exis
             2. Always close and dispose of any LDAP context that we create.
             3. Fixed encoding of CN and DN names during LDAP searches.
 
-        * Fixed an issue where the XQuery function `file:serialize` could use the incorrect character encoding depending on which platform eXist-db was being executed on.
+        * Fixed an issue where the XQuery function [`file:serialize`]({docs}/functions/file/serialize) could use the incorrect character encoding depending on which platform eXist-db was being executed on.
 
         * Fixed a comparison problem with node equality in the DOM API exposed via. the XML:DB Local API.
 
         * Fixed a `java.nio.file.Path` issue when loading eXist-db's `conf.xml` file from inside a classpath Jar file.
 
-        * Removed unnecessary error level logging of the XQuery `fn:error` function.
+        * Removed unnecessary error level logging of the XQuery [`fn:error`]({docs}/functions/fn/error) function.
 
         * Fixed an issue with the error message for restoring permissions; Now the entire resource URI is shown.
 
@@ -85,9 +85,9 @@ eXist-db 5.0.0-RC2 builds atop eXist-db [5.0.0-RC1](http://www.exist-db.org/exis
 
         * Fixed an issue with namespaces when merging in-memory documents.
 
-        * Fixed a NPE when calling `map:get` for a non-existent key/value map pair.
+        * Fixed a NPE when calling [`map:get`]({docs}/functions/map/get) for a non-existent key/value map pair.
 
-        * Fixed a NPE in `fn:data`.
+        * Fixed a NPE in [`fn:data`]({docs}/functions/fn/data).
 
         * Fixes a NPE when converting empty sequences.
 
@@ -96,7 +96,7 @@ eXist-db 5.0.0-RC2 builds atop eXist-db [5.0.0-RC1](http://www.exist-db.org/exis
 
         * Only attributes which are considered boolean in HTML5 have their values omitted. Closes [#777](https://github.com/eXist-db/exist/issues/777). Thanks to [Bert Willems](https://github.com/devatwork) from [FontoXML](https://fontoxml.com/) for this fix.
 
-        * Fixed an issue with the XQuery function `inspect:module-functions`, which was previously throwing a NPE. Closes [#1927](https://github.com/eXist-db/exist/issues/1927).
+        * Fixed an issue with the XQuery function [`inspect:module-functions`]({docs}/functions/inspect/module-functions), which was previously throwing a NPE. Closes [#1927](https://github.com/eXist-db/exist/issues/1927).
 
         * Fixed an issue with restoring Compressed (Zip) database backups. Closes [#1913](https://github.com/eXist-db/exist/issues/1913).
 
