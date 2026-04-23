@@ -41,7 +41,7 @@ substantial performance gains confirmed in production settings.
     performance on frequently updated documents. 
     - Performance boost for new range index.
     - Improved optimisation of wildcard steps in path expressions, e.g. **prefix:** *and* **:name** 
-    - Better performance for `util:eval` Optimisation of `fn:fold-left` and `fn:fold-right`
+    - Better performance for [`util:eval`]({docs}/functions/util/eval) Optimisation of [`fn:fold-left`]({docs}/functions/fn/fold-left) and [`fn:fold-right`]({docs}/functions/fn/fold-right)
 
 ### Mission Critical Bug Fixes
 
@@ -101,7 +101,7 @@ There have been numerous bug fixes and enhancements since eXist-db
     - Due to the legacy Full Text Index being removed, 
     the `text` (http://exist-db.org/xquery/text) XQuery
     module has also been removed. Users should now look toward
-    `fn:analyze-string`, e.g. 
+    [`fn:analyze-string`]({docs}/functions/fn/analyze-string), e.g. 
       - instead of using `text:groups()` use `analyze-string()//fn:group`,
       - instead of `text:filter("apparat", "([pr])")` use `analyze-string("apparat", "([pr])")//fn:match/string()`) 
     - There have been changes to some of the internal APIs. e.g. `XQueryService` has

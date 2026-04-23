@@ -23,9 +23,9 @@ eXist-db 4.6.0 builds atop eXist-db [4.6.0](http://www.exist-db.org/exist/apps/w
 * More elaborate XPath expressions in the Lucene index config of `collection.xconf` are now supported
 * New non-blocking lock-free implementation of the Transaction Manager
 * CData serialization now respects the `output:cdata-section-elements` option
-* New XQuery function `util:eval-and-serialize` for dynamic XQuery evaluation and serialization.
-* New XQuery function `util:binary-doc-content-digest` to retrieve a digest of a Binary Document 
-* Adaptive serialization is now used for `fn:trace` and `util:log-*` functions
+* New XQuery function [`util:eval-and-serialize`]({docs}/functions/util/eval-and-serialize) for dynamic XQuery evaluation and serialization.
+* New XQuery function [`util:binary-doc-content-digest`]({docs}/functions/util/binary-doc-content-digest) to retrieve a digest of a Binary Document 
+* Adaptive serialization is now used for [`fn:trace`]({docs}/functions/fn/trace) and `util:log-*` functions
 * Updated Jetty to version 9.4.14.v20181114
 * Updated to JLine version 3
 * Updated to XML:DB API 1.7.0
@@ -38,10 +38,10 @@ eXist-db 4.6.0 builds atop eXist-db [4.6.0](http://www.exist-db.org/exist/apps/w
 * Fixed Garbage Collection churn issue with serialization
 * Fixed Backup/Restore progress reporting
 * XQuery Library Modules on the Java Classpath are now correctly resolved from the importing XQuery module
-* Prevent a `NullPointerException` in `fn:unparsed-text-available`
+* Prevent a `NullPointerException` in [`fn:unparsed-text-available`]({docs}/functions/fn/unparsed-text-available)
 * Collection permissions are now correctly prefixed 'c' in the Java Admin Client shell
-* Fixed an `ArrayOutOfBoundException` with `array:get`
-* Corrected the XPath Error Code for `array:get`
+* Fixed an `ArrayOutOfBoundException` with [`array:get`]({docs}/functions/array/get)
+* Corrected the XPath Error Code for [`array:get`]({docs}/functions/array/get)
 * Fixed text alignment of output in the Java Admin Client shell
 * Fixed missing dependencies issue with the Java Admin Client when launched via WebStart
 * When building from source, if required XAR packages are not available, the build will now fail.

@@ -47,16 +47,16 @@ repo:install-and-deploy("http://exist-db.org/apps/existdb-packageservice",
 - Fixed parser issues to allow empty function body, and allow `||` in attribute and element content
 - Allow other seed types in fn:random-number-generator (like dates) - [#3072](https://github.com/eXist-db/exist/pull/3072)
 - Fixed the cardinality of fn:random-number-generator#1 - [#3249](https://github.com/eXist-db/exist/pull/3249)
-- Improved `fn:format-number` - [#3348](https://github.com/eXist-db/exist/pull/3348)
-- Made `fn:collection` spec compliant - [#3349](https://github.com/eXist-db/exist/pull/3349)
-- Allow sequences for batch deletions in `map:remove` and `array:remove` - [#3328](https://github.com/eXist-db/exist/pull/3228), [#3692](https://github.com/eXist-db/exist/pull/3692)
+- Improved [`fn:format-number`]({docs}/functions/fn/format-number) - [#3348](https://github.com/eXist-db/exist/pull/3348)
+- Made [`fn:collection`]({docs}/functions/fn/collection) spec compliant - [#3349](https://github.com/eXist-db/exist/pull/3349)
+- Allow sequences for batch deletions in [`map:remove`]({docs}/functions/map/remove) and [`array:remove`]({docs}/functions/array/remove) - [#3328](https://github.com/eXist-db/exist/pull/3228), [#3692](https://github.com/eXist-db/exist/pull/3692)
 
 ### New functions added
 
-- `array:sort` - [#3596](https://github.com/eXist-db/exist/pull/3596)
+- [`array:sort`]({docs}/functions/array/sort) - [#3596](https://github.com/eXist-db/exist/pull/3596)
 - `fn:document-uri#0` - [#3644](https://github.com/eXist-db/exist/pull/3644)
 - `fn:trace#1` - [#3597](https://github.com/eXist-db/exist/pull/3597)
-- `fn:xml-to-json` - [#3141](https://github.com/eXist-db/exist/pull/3141)
+- [`fn:xml-to-json`]({docs}/functions/fn/xml-to-json) - [#3141](https://github.com/eXist-db/exist/pull/3141)
 
 ### Other enhancements
 
@@ -65,8 +65,8 @@ repo:install-and-deploy("http://exist-db.org/apps/existdb-packageservice",
 - The implementation of maps was changed to gain performance
 - Allow Bearer tokens and other schemes than "Basic" in Authentication header
 - Allow HTTP verb PATCH
-- Custom base64 handling code was replaced with apache.commons code and a new function `util:base64-encode-url-safe` was added
-- Enhanced `util:eval` to preserve the original error information
+- Custom base64 handling code was replaced with apache.commons code and a new function [`util:base64-encode-url-safe`]({docs}/functions/util/base64-encode-url-safe) was added
+- Enhanced [`util:eval`]({docs}/functions/util/eval) to preserve the original error information
 - In Lucene, you can now use different analyzers for indexing and querying
 
 ### Bundled apps

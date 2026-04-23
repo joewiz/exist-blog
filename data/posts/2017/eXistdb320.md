@@ -23,8 +23,8 @@ We are happy to announce the release of eXist-db v3.2.0. This is a minor release
 - Added an IPRange Security Realm, to authorize users by IP address only. (Disabled by default)
 - Added `--forking` and `--pidfile` options to startup scripts
 - Added configuration options to `$EXIST_HOME/webapp/WEB-INF/web.xml` to disable XQuery and XUpdate execution via submission to the RESTServer.
-- Added the XPath 3.1 function `fn:load-xquery-module`
-- Added the XQuery function `xmldb:find-last-modified-until`
+- Added the XPath 3.1 function [`fn:load-xquery-module`]({docs}/functions/fn/load-xquery-module)
+- Added the XQuery function [`xmldb:find-last-modified-until`]({docs}/functions/xmldb/find-last-modified-until)
 
 ### Performance Improvements
 
@@ -50,7 +50,7 @@ We are happy to announce the release of eXist-db v3.2.0. This is a minor release
 - Avoid implicit conversion of unicode `\x160` as numerical entity `&#160;` when serializing XML
 
 ### Clean Up and Refactoring
-- Corrected the function documentation of `xmldb:last-modified-since`
+- Corrected the function documentation of [`xmldb:last-modified-since`]({docs}/functions/xmldb/last-modified-since)
 - Disabled sequential token generation in the PersistentLoginModule
 - Disabled auto-deployment of EXPath packages when running tests; faster test suite
 - Switched from MBean to MXBeand for improved JMX client support

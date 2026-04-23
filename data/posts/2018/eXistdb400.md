@@ -17,13 +17,13 @@ original-url: "https://exist-db.org/exist/apps/wiki/blogs/eXist/eXistdb400"
 eXist-db v4.0.0 has just been released. This is a major release, which contains, API changes, several new features and bug fixes.
 
 ### Features
-* Added `fn:unparsed-text`, `fn:unparsed-text-lines` and `fn:unparsed-text-available` functions.
+* Added [`fn:unparsed-text`]({docs}/functions/fn/unparsed-text), [`fn:unparsed-text-lines`]({docs}/functions/fn/unparsed-text-lines) and [`fn:unparsed-text-available`]({docs}/functions/fn/unparsed-text-available) functions.
 * Implemented HTML ASCII Case Insensitive Collation for XPath 3.1.
 * Replaced `ASCIIFoldingFilter` with `ICUFoldingFilter` in `NoDiacriticsAnalyzer` for better language search support.
 * New User Manager application shipped for the Dashboard.
 * Updated Cache Extension Module:
     * Now implements an LRU policy with both TTL and size options.
-    * New functions: `cache:names()`, `cache:keys($name)`, and `cache:destroy($name)`.
+    * New functions: [`cache:names()`]({docs}/functions/cache/names), `cache:keys($name)`, and `cache:destroy($name)`.
 * Scheduled task option `unschedule-on-exception` is now exposed in `conf.xml`.
 * Each thread that eXist creates is now explicitly named for easier identification.
 * Bash Scripts now use `/bin/env` to locate bash.
@@ -54,7 +54,7 @@ eXist-db v4.0.0 has just been released. This is a major release, which contains,
 * Corrected invalid type `empty()` to `empty-sequence()`.
 * Fixed overzealous locking in XML:DB Local API copy operations.
 * Fix to Namespace handling on in-memory DOM nodes.
-* Fixed a `NullPointerException` in `fn:id`.
+* Fixed a `NullPointerException` in [`fn:id`]({docs}/functions/fn/id).
 * Fixed comparison issue with empty sequences.
 * Fixed broker leak in Image Extension Module.
 * Math Extension Module functions now correctly report their namespace prefix.

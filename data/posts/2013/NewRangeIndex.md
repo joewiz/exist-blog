@@ -63,7 +63,7 @@ To use the new range index, wrap the range index definitions into a range elemen
 
 If you store this definition and do a reindex, you should find new index files in the `webapp/WEB-INF/data/range` directory (or wherever you configured your data directory to be).
 
-Just as the old range index, the new indexes will be used automatically for general or value comparisons as well as string functions like `fn:contains`, `fn:starts-with`, `fn:ends-with` (`fn:matches` is currently not supported due to limitations in Lucene's regular expression handling). 
+Just as the old range index, the new indexes will be used automatically for general or value comparisons as well as string functions like [`fn:contains`]({docs}/functions/fn/contains), [`fn:starts-with`]({docs}/functions/fn/starts-with), [`fn:ends-with`]({docs}/functions/fn/ends-with) ([`fn:matches`]({docs}/functions/fn/matches) is currently not supported due to limitations in Lucene's regular expression handling). 
 
 Above configuration applies to documents using MODS, a standard for bibliographical metadata. To provide some examples, the following XPath expressions should use the created indexes:
 

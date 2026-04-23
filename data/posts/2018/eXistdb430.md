@@ -49,9 +49,9 @@ in-memory documents.
 
 * Fixed an issue with namespaces when merging in-memory documents.
 
-* Fixed a NPE when calling `map:get` for a non-existent key/value map pair.
+* Fixed a NPE when calling [`map:get`]({docs}/functions/map/get) for a non-existent key/value map pair.
 
-* Fixed a NPE in `fn:data`.
+* Fixed a NPE in [`fn:data`]({docs}/functions/fn/data).
 
 * Fixes a NPE when converting empty sequences.
 

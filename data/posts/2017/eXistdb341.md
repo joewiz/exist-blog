@@ -19,7 +19,7 @@ eXist-db v3.4.1 has just been released. This is a hotfix release, which contains
 We recommend that all users of eXist 3.4.0 should upgrade to eXist 3.4.1.
 
 ### Bug fixes
-* Fixed a regression related to XQuery Module cleanup and `util:eval` which was introduced in eXist-db 3.4.0.
+* Fixed a regression related to XQuery Module cleanup and [`util:eval`]({docs}/functions/util/eval) which was introduced in eXist-db 3.4.0.
 * Fixed the signing of the core Jar files (`start.jar`, `exist.jar`, and  `exist-optional.jar`). This is required for using the Java Admin Client via. Java WebStart.
 * Corrected the argument parser in `ExportMain` which is used for some backup scenarios. Previously `ExportMain` would exit after startup with an error.
 * Fixed removal of an existing backup directory when starting a backup from the Java Admin Client. Previously the directory would always have been deleted; even when the user chose to preserve it.

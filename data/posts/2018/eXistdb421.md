@@ -22,7 +22,7 @@ We recommend that all users of eXist 4.2.0 should upgrade to eXist 4.2.1.
 
 * Only attributes which are considered boolean in HTML5 have their values omitted. Closes [#777](https://github.com/eXist-db/exist/issues/777). Thanks to [Bert Willems](https://github.com/devatwork) from [FontoXML](https://fontoxml.com/) for this fix.
 
-* Fixed an issue with the XQuery function `inspect:module-functions`, which was previously throwing a NPE. Closes [#1927](https://github.com/eXist-db/exist/issues/1927).
+* Fixed an issue with the XQuery function [`inspect:module-functions`]({docs}/functions/inspect/module-functions), which was previously throwing a NPE. Closes [#1927](https://github.com/eXist-db/exist/issues/1927).
 
 * Fixed an issue with restoring Compressed (Zip) database backups. Closes Closes [#1913](https://github.com/eXist-db/exist/issues/1913).
 

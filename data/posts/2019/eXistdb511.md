@@ -21,7 +21,7 @@ This is a small hotfix release addressing a few important issues.
 [#3126](https://github.com/eXist-db/exist/pull/3126)
 * Fixed an issue with upgrading packages when restoring a backup
 [#3129](https://github.com/eXist-db/exist/pull/3129)
-* Fixed the implementation of `fn:format-number`
+* Fixed the implementation of [`fn:format-number`]({docs}/functions/fn/format-number)
 [#3130](https://github.com/eXist-db/exist/pull/3130)
 * Fixed a shutdown issue when running multiple database instances
 [#3145](https://github.com/eXist-db/exist/pull/3145)

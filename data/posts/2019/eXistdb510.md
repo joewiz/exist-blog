@@ -66,7 +66,7 @@ documents [#3076](https://github.com/eXist-db/exist/pull/3076)
 [#3112](https://github.com/eXist-db/exist/pull/3112)
 *     Fix inverted command line arg test in Java Admin Client
 [#3010](https://github.com/eXist-db/exist/pull/3010)
-*     Fix `util:parse-html` missing dependency
+*     Fix [`util:parse-html`]({docs}/functions/util/parse-html) missing dependency
 [#3047](https://github.com/eXist-db/exist/pull/3047)
 *     Avoid NPE when reporting error
 [#3078](https://github.com/eXist-db/exist/pull/3078)

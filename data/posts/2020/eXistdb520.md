@@ -30,9 +30,9 @@ This issue is present in all eXist-db 5.x.x version prior to 5.2.0,
 but not 4.7.1. This issue could cause a <5.2.0 system to eventually lock-up.
 
 ## Features
-* Implemented the XQuery function `array:put`
+* Implemented the XQuery function [`array:put`]({docs}/functions/array/put)
 [#3092](https://github.com/eXist-db/exist/pull/3092)
-* Implemented the XQuery function `fn:json-to-xml`
+* Implemented the XQuery function [`fn:json-to-xml`]({docs}/functions/fn/json-to-xml)
 [#3093](https://github.com/eXist-db/exist/pull/3093)
 * Facility to have Document locks use the same hierarchical path based
 locking as Collection locks
@@ -58,7 +58,7 @@ selected [#3142](https://github.com/eXist-db/exist/pull/3142)
 functioning [#3206](https://github.com/eXist-db/exist/pull/3206)
 * Fixed opening the Statistics Index
 [#3201](https://github.com/eXist-db/exist/pull/3201)
-* Fixed a Cast Exception in `fn:subsequence` on sequences with atomic
+* Fixed a Cast Exception in [`fn:subsequence`]({docs}/functions/fn/subsequence) on sequences with atomic
 values [#3199](https://github.com/eXist-db/exist/pull/3199)
 * Fixed a memory-leak when shutting down an instance; occurred when
 there were multiple instances

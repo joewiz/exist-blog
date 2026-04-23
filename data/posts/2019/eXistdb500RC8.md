@@ -27,17 +27,17 @@ NOTE: This is likely the last Release Candidate before 5.0.0 is released. We kin
 * Improved the performance of Lock Striping [#2831](https://github.com/eXist-db/exist/pull/2831).
 * Optimized XMLString to reduce copying.
 * Spatial Index is now available again [#2601](https://github.com/eXist-db/exist/pull/2601).
-* Options can now be passed to `ft:search` queries.
-* A leading wildcard can now be used in `ft:search` queries [#2468](https://github.com/eXist-db/exist/pull/2468).
-* Added the new function `ft:index-keys-for-field` for the Lucene Index to complement `util:index-keys` for field indexes.
+* Options can now be passed to [`ft:search`]({docs}/functions/ft/search) queries.
+* A leading wildcard can now be used in [`ft:search`]({docs}/functions/ft/search) queries [#2468](https://github.com/eXist-db/exist/pull/2468).
+* Added the new function [`ft:index-keys-for-field`]({docs}/functions/ft/index-keys-for-field) for the Lucene Index to complement [`util:index-keys`]({docs}/functions/util/index-keys) for field indexes.
 * Added a `MetaAnalyzer` for the Lucene Index to allow different analyzers to be used per-field.
 * Lucene Index definitions can now have a conditional expression provided in an `if` attribute.
 * Added experimental support for Faceting with the Lucene Index [#2629](https://github.com/eXist-db/exist/pull/2629).
-* Added the `fn:contains-token` function [#2799](https://github.com/eXist-db/exist/pull/2799).
-* Added the `fn:parse-ietf-date()` function [#2866](https://github.com/eXist-db/exist/pull/2866).
-* Added the `fn:random-number-generator` function.
-* Added the `system:get-product-name` function.
-* Added the `xmldb:copy-resource` and `xmldb:copy-collection` functions.
+* Added the [`fn:contains-token`]({docs}/functions/fn/contains-token) function [#2799](https://github.com/eXist-db/exist/pull/2799).
+* Added the [`fn:parse-ietf-date()`]({docs}/functions/fn/parse-ietf-date) function [#2866](https://github.com/eXist-db/exist/pull/2866).
+* Added the [`fn:random-number-generator`]({docs}/functions/fn/random-number-generator) function.
+* Added the [`system:get-product-name`]({docs}/functions/system/get-product-name) function.
+* Added the [`xmldb:copy-resource`]({docs}/functions/xmldb/copy-resource) and [`xmldb:copy-collection`]({docs}/functions/xmldb/copy-collection) functions.
 * Rewrote the Service Manager for Windows platforms.
 * Docker images now use an Uber jar for easy deployment.
 * New Jar Installer based on IzPack 5.
@@ -81,7 +81,7 @@ NOTE: This is likely the last Release Candidate before 5.0.0 is released. We kin
 * Fixed non-spec compliant issues with `preceding-sibling` and `following-sibling` axes.
 * Fixed a regression with XQuery Update's `insert following` expression [#2624](https://github.com/eXist-db/exist/pull/2624).
 * Removed a bad optimization affecting expressions like `/a/b//c[d = 123]` [#2837](https://github.com/eXist-db/exist/pull/2837).
-* `fn:tokenize` is now case-sensitive by default [#2742](https://github.com/eXist-db/exist/pull/2742).
+* [`fn:tokenize`]({docs}/functions/fn/tokenize) is now case-sensitive by default [#2742](https://github.com/eXist-db/exist/pull/2742).
 * Fixed an issue where the content of XML Comments was incorrectly escaped [#2740](https://github.com/eXist-db/exist/pull/2740).
 * Reduced the memory use and increased performance of file transfers in the XML:DB API [#2630](https://github.com/eXist-db/exist/pull/2630).
 * Reduced the memory use and computation when sorting.
@@ -91,7 +91,7 @@ NOTE: This is likely the last Release Candidate before 5.0.0 is released. We kin
 * Fixed memory leaks with the `CharArrayPool` and `ByteArayPool`.
 * Fixed an issue whereby eXist-db might not start correctly if Journal Recovery was disabled [#2539](https://github.com/eXist-db/exist/pull/2539).
 * Fixed a regression with overlapping transactions when deploying EXPath packages.
-* Made the parsing of `util:serialize` parameters conform with the function documentation.
+* Made the parsing of [`util:serialize`]({docs}/functions/util/serialize) parameters conform with the function documentation.
 * Ensure that all users have at least one Primary Group.
 * Small fixes to the `EnsureLockingAspect`.
 * Fixed an issue with the Namespace Constructor when there is an empty prefix [#2584](https://github.com/eXist-db/exist/pull/2584).
@@ -102,9 +102,9 @@ fastutil.di.unimi.it/) [#2588](https://github.com/eXist-db/exist/pull/2588).
 * Fix an issue with replacing binary resources when owner/group differ from the active user [#2595](https://github.com/eXist-db/exist/pull/2595).
 * Fixed purging of old zip backups [#2609](https://github.com/eXist-db/exist/pull/2609).
 * Fixed a `NullPointerException` in `LDAPRealm` when searching for group members [#2618](https://github.com/eXist-db/exist/pull/2618).
-* Corrected the order of arguments in `fn:for-each` and `fn:for-each-pair`.
+* Corrected the order of arguments in [`fn:for-each`]({docs}/functions/fn/for-each) and [`fn:for-each-pair`]({docs}/functions/fn/for-each-pair).
 * Fixed the context sequence for XQuery higher-order-functions [#2448](https://github.com/eXist-db/exist/pull/2448).
-* Fixed an `ArrayOutOfBoundsException` when querying documents with enclosed expressions and the `fn:id` function [#2646](https://github.com/eXist-db/exist/pull/2646).
+* Fixed an `ArrayOutOfBoundsException` when querying documents with enclosed expressions and the [`fn:id`]({docs}/functions/fn/id) function [#2646](https://github.com/eXist-db/exist/pull/2646).
 * Fixed a problem with Collation comparison on empty strings [#2671](https://github.com/eXist-db/exist/pull/2671).
 * Fixed a problem with parallel sorting when using Collations [#2669](https://github.com/eXist-db/exist/pull/2669).
 * Fixed an issue where descendent nodes were incorrectly indexed in the Lucene Index [#2682](ttps://github.com/eXist-db/exist/pull/2682).
@@ -128,58 +128,58 @@ We have also removed a number of previously deprecated functions, modules, and e
 
 * Removed the draft syntax for the XQuery Map Constructor, i.e. `map { "x" := "y"}` [#2892](https://github.com/eXist-db/exist/pull/2892).
 * cache module:
-	* `cache:cache`, caches are now created on demand.
+	* [`cache:cache`]({docs}/functions/cache/cache), caches are now created on demand.
 * fn module:
-	* `fn:map`, use the Map constructor instead.
-	* `fn:map-pairs` function, you should instead use `fn:for-each-pair`.
-	* `fn:string-pad`.
+	* [`fn:map`]({docs}/functions/fn/map), use the Map constructor instead.
+	* [`fn:map-pairs`]({docs}/functions/fn/map-pairs) function, you should instead use [`fn:for-each-pair`]({docs}/functions/fn/for-each-pair).
+	* [`fn:string-pad`]({docs}/functions/fn/string-pad).
 * image module:
 	* `image:get-metadata`.
 * map module:
-	* `map:new` function, you should instead use the map constructor.
-	* `map:for-each-entry`, you should instead use `map:for-each`.
+	* [`map:new`]({docs}/functions/map/new) function, you should instead use the map constructor.
+	* [`map:for-each-entry`]({docs}/functions/map/for-each-entry), you should instead use [`map:for-each`]({docs}/functions/map/for-each).
 * response module:
-	* `response:set-response-header`, use `response:set-header` instead.
+	* [`response:set-response-header`]({docs}/functions/response/set-response-header), use [`response:set-header`]({docs}/functions/response/set-header) instead.
 * sm module:
-	* `sm:delete-group`, use `sm:remove-group` instead.
-	* `sm:get-groups`
+	* [`sm:delete-group`]({docs}/functions/sm/delete-group), use [`sm:remove-group`]({docs}/functions/sm/remove-group) instead.
+	* [`sm:get-groups`]({docs}/functions/sm/get-groups)
 * util module:
-	* `util:catch`, use XQuery 3.0's `try`/`catch` expression instead.
-	* `util:eval-async`.
-	* `util:parse`, use XQuery 3.0's `fn:parse-xml` or ` fn:parse-xml-fragment` instead.
-	* `util:serialize`, use XQuery 3.0's `fn:serialize` instead.
+	* [`util:catch`]({docs}/functions/util/catch), use XQuery 3.0's `try`/`catch` expression instead.
+	* [`util:eval-async`]({docs}/functions/util/eval-async).
+	* [`util:parse`]({docs}/functions/util/parse), use XQuery 3.0's [`fn:parse-xml`]({docs}/functions/fn/parse-xml) or ` fn:parse-xml-fragment` instead.
+	* [`util:serialize`]({docs}/functions/util/serialize), use XQuery 3.0's [`fn:serialize`]({docs}/functions/fn/serialize) instead.
 * validation module:
-	* `validation:validate`, you should use the other more specific functions within this module.
-	* `validation:validate-report`, you should use the other more specific functions within this module.
+	* [`validation:validate`]({docs}/functions/validation/validate), you should use the other more specific functions within this module.
+	* [`validation:validate-report`]({docs}/functions/validation/validate-report), you should use the other more specific functions within this module.
 * xmldb module:
-	* `xmldb:add-user-to-group`, use `sm:add-group-member` instead.
-	* `xmldb:change-user`, instead use various task specific functions in the `sm` module.
- 	* `xmldb:chmod-collection`, use`sm:chmod` instead.
-	* `xmldb:chmod-resource`, use `sm:chmod`, instead.
-	* `xmldb:copy`, use `xmldb:copy-collection` and `xmldb:copy-resource` instead.
-	* `xmldb:create-group`, use `sm:create-group` instead.
-	* `xmldb:create-user`, use `sm:create-account` instead.
-	* `xmldb:delete-user`, use `sm:remove-account` instead.
-	* `xmldb:document`, use `fn:doc` instead.
-	* `xmldb:exists-user`, use `sm:user-exists` instead.
-	* `xmldb:get-current-user`, use `sm:id()//sm:real/sm:username/string()` instead.
-	* `xmldb:get-current-user-attribute`, use `sm:get-account-metadata` instead.
-	* `xmldb:get-current-user-attribute-names`, use `sm:get-account-metadata-keys` instead.
-	* `xmldb:get-group`, use `sm:get-group` instead.
-	* `xmldb:get-owner`, use `sm:get-permissions` instead.
-	* `xmldb:get-user-groups`, use `sm:get-user-groups` instead.
-	* `xmldb:get-user-home`.
-	* `xmldb:get-user-primary-group`, use `sm:get-user-primary-group` instead.
-	* `xmldb:get-users`, use `sm:list-users` instead.
-	* `xmldb:group-exists`, use `sm:group-exists` instead.
-	* `xmldb:is-admin-user`, use `sm:is-dba` instead.
-	* `xmldb:is-authenticated`, use `sm:is-authenticated` or `sm:is-externally-authenticated` instead.
-	* `xmldb:get-permissions`, use `sm:get-permissions` instead.
-	* `xmldb:permissions-to-string`, use `sm:octal-to-mode` instead.
-	* `xmldb:string-to-permissions`, use `sm:mode-to-octal` instead.
-	* `xmldb:remove-user-from-group`, use `sm:remove-group-member` instead.
-	* `xmldb:set-collection-permissions`, use `sm:chmod`, `sm:chown` and `sm:chgrp` instead.
-	* `xmldb:set-resource-permissions`, use `sm:chmod`, `sm:chown` and `sm:chgrp` instead.
+	* [`xmldb:add-user-to-group`]({docs}/functions/xmldb/add-user-to-group), use [`sm:add-group-member`]({docs}/functions/sm/add-group-member) instead.
+	* [`xmldb:change-user`]({docs}/functions/xmldb/change-user), instead use various task specific functions in the `sm` module.
+ 	* [`xmldb:chmod-collection`]({docs}/functions/xmldb/chmod-collection), use[`sm:chmod`]({docs}/functions/sm/chmod) instead.
+	* [`xmldb:chmod-resource`]({docs}/functions/xmldb/chmod-resource), use [`sm:chmod`]({docs}/functions/sm/chmod), instead.
+	* [`xmldb:copy`]({docs}/functions/xmldb/copy), use [`xmldb:copy-collection`]({docs}/functions/xmldb/copy-collection) and [`xmldb:copy-resource`]({docs}/functions/xmldb/copy-resource) instead.
+	* [`xmldb:create-group`]({docs}/functions/xmldb/create-group), use [`sm:create-group`]({docs}/functions/sm/create-group) instead.
+	* [`xmldb:create-user`]({docs}/functions/xmldb/create-user), use [`sm:create-account`]({docs}/functions/sm/create-account) instead.
+	* [`xmldb:delete-user`]({docs}/functions/xmldb/delete-user), use [`sm:remove-account`]({docs}/functions/sm/remove-account) instead.
+	* [`xmldb:document`]({docs}/functions/xmldb/document), use [`fn:doc`]({docs}/functions/fn/doc) instead.
+	* [`xmldb:exists-user`]({docs}/functions/xmldb/exists-user), use [`sm:user-exists`]({docs}/functions/sm/user-exists) instead.
+	* [`xmldb:get-current-user`]({docs}/functions/xmldb/get-current-user), use `sm:id()//sm:real/sm:username/string()` instead.
+	* [`xmldb:get-current-user-attribute`]({docs}/functions/xmldb/get-current-user-attribute), use [`sm:get-account-metadata`]({docs}/functions/sm/get-account-metadata) instead.
+	* [`xmldb:get-current-user-attribute-names`]({docs}/functions/xmldb/get-current-user-attribute-names), use [`sm:get-account-metadata-keys`]({docs}/functions/sm/get-account-metadata-keys) instead.
+	* [`xmldb:get-group`]({docs}/functions/xmldb/get-group), use [`sm:get-group`]({docs}/functions/sm/get-group) instead.
+	* [`xmldb:get-owner`]({docs}/functions/xmldb/get-owner), use [`sm:get-permissions`]({docs}/functions/sm/get-permissions) instead.
+	* [`xmldb:get-user-groups`]({docs}/functions/xmldb/get-user-groups), use [`sm:get-user-groups`]({docs}/functions/sm/get-user-groups) instead.
+	* [`xmldb:get-user-home`]({docs}/functions/xmldb/get-user-home).
+	* [`xmldb:get-user-primary-group`]({docs}/functions/xmldb/get-user-primary-group), use [`sm:get-user-primary-group`]({docs}/functions/sm/get-user-primary-group) instead.
+	* [`xmldb:get-users`]({docs}/functions/xmldb/get-users), use [`sm:list-users`]({docs}/functions/sm/list-users) instead.
+	* [`xmldb:group-exists`]({docs}/functions/xmldb/group-exists), use [`sm:group-exists`]({docs}/functions/sm/group-exists) instead.
+	* [`xmldb:is-admin-user`]({docs}/functions/xmldb/is-admin-user), use [`sm:is-dba`]({docs}/functions/sm/is-dba) instead.
+	* [`xmldb:is-authenticated`]({docs}/functions/xmldb/is-authenticated), use [`sm:is-authenticated`]({docs}/functions/sm/is-authenticated) or [`sm:is-externally-authenticated`]({docs}/functions/sm/is-externally-authenticated) instead.
+	* [`xmldb:get-permissions`]({docs}/functions/xmldb/get-permissions), use [`sm:get-permissions`]({docs}/functions/sm/get-permissions) instead.
+	* [`xmldb:permissions-to-string`]({docs}/functions/xmldb/permissions-to-string), use [`sm:octal-to-mode`]({docs}/functions/sm/octal-to-mode) instead.
+	* [`xmldb:string-to-permissions`]({docs}/functions/xmldb/string-to-permissions), use [`sm:mode-to-octal`]({docs}/functions/sm/mode-to-octal) instead.
+	* [`xmldb:remove-user-from-group`]({docs}/functions/xmldb/remove-user-from-group), use [`sm:remove-group-member`]({docs}/functions/sm/remove-group-member) instead.
+	* [`xmldb:set-collection-permissions`]({docs}/functions/xmldb/set-collection-permissions), use [`sm:chmod`]({docs}/functions/sm/chmod), [`sm:chown`]({docs}/functions/sm/chown) and [`sm:chgrp`]({docs}/functions/sm/chgrp) instead.
+	* [`xmldb:set-resource-permissions`]({docs}/functions/xmldb/set-resource-permissions), use [`sm:chmod`]({docs}/functions/sm/chmod), [`sm:chown`]({docs}/functions/sm/chown) and [`sm:chgrp`]({docs}/functions/sm/chgrp) instead.
 
 * XQuery Context module.
 * XQuery DateTime module. Consider using [dtm.xqm](https://gist.github.com/adamretter/fcd8c99cf977ff31ad83dc37c4e49783) instead.

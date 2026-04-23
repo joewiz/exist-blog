@@ -20,7 +20,7 @@ eXist-db v3.5.0 has just been released. This is a minor release, which contains 
 
 * Improvements to Core Level 1 DOM compliance.
 * Implemented missing functions `fn:tokenize#1` and `fn:node-name#0`.
-* Regular Expressions are now Cached (e.g. `fn:analyze-string`, `fn:matches`, `fn:replace`, `fn:tokenize` and `util:get-fragment-between`).
+* Regular Expressions are now Cached (e.g. [`fn:analyze-string`]({docs}/functions/fn/analyze-string), [`fn:matches`]({docs}/functions/fn/matches), [`fn:replace`]({docs}/functions/fn/replace), [`fn:tokenize`]({docs}/functions/fn/tokenize) and [`util:get-fragment-between`]({docs}/functions/util/get-fragment-between)).
 * Updated the EXPath HTTP Client:
 	* Added support for non-chunked HTTP 1.1.
 	* Pools connections to improve performance.
@@ -46,11 +46,11 @@ The bundled applications of the Demo Apps, Documentation, eXide, Function Docs, 
 * Fixed an issue with quoted paths and white-space in Windows batch files.
 * `Node#hasChildNodes` no longer includes attributes.
 * Fixed parameter handling bugs in the functions `fn:tokenize#2`, and `fn:tokenize#3`.
-* Fixed the handling of `q` and `x` regex flags for `fn:matches`, `fn:replace` and `fn:tokenize`.
+* Fixed the handling of `q` and `x` regex flags for [`fn:matches`]({docs}/functions/fn/matches), [`fn:replace`]({docs}/functions/fn/replace) and [`fn:tokenize`]({docs}/functions/fn/tokenize).
 * Fixed the `fn:local-name#0`, `fn:name#0` and `fn:namespace-uri#0` functions to correctly work with the context item.
 * The embedded Jetty server now uses the JVM's temporary folder for temporary files.
 * Fixed compatibility with Eclipse IDE project files.
-* Corrected the description of the `xmldb:clear-lock` function.
+* Corrected the description of the [`xmldb:clear-lock`]({docs}/functions/xmldb/clear-lock) function.
 
 
 ### Backwards Compatibility
