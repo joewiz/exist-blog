@@ -11,6 +11,8 @@
                 <field name="site-title" expression="title"/>
                 <field name="site-app" expression="'blog'"/>
                 <field name="site-section" expression="'posts'"/>
+                <!-- canonical root-relative view URL (the controller's /{year}/{slug} route) -->
+                <field name="site-url" expression="url"/>
             </text>
         </lucene>
     </index>
